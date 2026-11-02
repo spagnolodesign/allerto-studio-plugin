@@ -20,7 +20,7 @@ Il centro di comando dello studio di amministrazione condominiale e le prime aut
 
 1. Installa il plugin:
    - **claude.ai / Cowork (Team o Enterprise)**: l'Owner aggiunge questo repository come marketplace in *Impostazioni organizzazione > Plugins & skills* e rende disponibile `allerto-studio`.
-   - **Claude Code**: `/plugin install allerto-studio --marketplace <account>/<repo>` (sostituire con il repository GitHub che ospita questo marketplace).
+   - **Claude Code**: `/plugin install allerto-studio --marketplace spagnolodesign/allerto-studio-plugin`.
 2. Chiedi a Claude: "configura lo studio".
 3. Rispondi alle domande: nome dello studio, email dell'amministratore, firma, orario del riepilogo.
 

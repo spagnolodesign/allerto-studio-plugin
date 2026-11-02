@@ -1,0 +1,789 @@
+<meta name="dash-one-writer">
+<link rel="stylesheet" href="fonts.css">
+<style>
+  #dash-root { --dash-gutter: 0; }
+  .al {
+    --al-bg: #F1EEE6; --al-panel: #FAF9F5; --al-ink: #141413; --al-ink-2: #3D3D3A; --al-muted: #6E6962;
+    --al-line: #DCD8CD; --al-line-soft: #E8E4DA; --al-accent: #EE4A1C; --al-accent-hover: #C93A12; --al-ph: #8A8478;
+    --al-sans: "Hanken Grotesk", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --al-serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+    --al-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    --al-ease: cubic-bezier(.2,.7,.2,1);
+    background: var(--al-bg); color: var(--al-ink); font-family: var(--al-sans); font-size: 16px; line-height: 1.5;
+    -webkit-font-smoothing: antialiased; min-height: 100%;
+  }
+  .al * { box-sizing: border-box; }
+  .al h1, .al h2, .al h3, .al p { margin: 0; }
+  .al-wrap { max-width: 1180px; margin: 0 auto; padding: 0 32px 64px; display: grid; gap: 16px; }
+
+  .al-top { position: sticky; top: 0; z-index: 3; background: rgba(241,238,230,.94); border-bottom: 1px solid var(--al-line); }
+  .al-top-in { max-width: 1180px; margin: 0 auto; padding: 0 32px; height: 60px; display: flex; align-items: center; gap: 24px; }
+  .al-logo { font-weight: 700; letter-spacing: -.035em; line-height: 1; font-size: 1.6rem; color: var(--al-ink); white-space: nowrap; }
+  .al-logo b { color: var(--al-accent); font-weight: 700; }
+  .al-studio { font-size: .85rem; color: var(--al-muted); white-space: nowrap; }
+  .al-nav { display: flex; gap: 18px; overflow-x: auto; scrollbar-width: none; font-size: .92rem; color: var(--al-ink-2); margin-left: auto; }
+  .al-nav::-webkit-scrollbar { display: none; }
+  .al-nav a { color: inherit; text-decoration: none; white-space: nowrap; transition: color .15s ease; }
+  .al-nav a:hover { color: var(--al-accent); }
+
+  .al-hero { padding: 40px 0 16px; display: grid; grid-template-columns: 1.45fr 1fr; gap: 48px; align-items: end; }
+  .al-eyebrow { font-size: .88rem; color: var(--al-muted); margin-bottom: 8px; }
+  .al-h1 { font-size: clamp(1.8rem, 3.4vw, 2.4rem); font-weight: 700; letter-spacing: -.03em; line-height: 1.05; }
+  .al-h1 em { font-style: normal; color: var(--al-accent); }
+  .al-lede { font-family: var(--al-serif); font-size: 1.06rem; line-height: 1.5; color: var(--al-ink-2); }
+  .al-lede b { font-family: var(--al-sans); font-weight: 700; color: var(--al-ink); font-variant-numeric: tabular-nums; }
+  .al-meta { font-family: var(--al-serif); font-size: .92rem; color: rgba(20,20,19,.75); margin-top: 10px; }
+
+  .al-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 10.5rem), 1fr)); gap: 16px; }
+  .al-stat { background: var(--al-panel); border: 1px solid var(--al-line); border-radius: 16px; padding: 18px 20px; }
+  .al-stat:has(.is-bad) { box-shadow: 0 0 0 1px rgba(238,74,28,.4); }
+  .al-l { font-size: .85rem; color: var(--al-muted); }
+  .al-v { font-size: 2.1rem; font-weight: 700; letter-spacing: -.02em; line-height: 1; margin-top: 10px; font-variant-numeric: tabular-nums; min-height: 1em; }
+  .al-hint { font-size: .78rem; color: var(--al-muted); margin-top: 8px; }
+
+  .al-card { background: var(--al-panel); border: 1px solid var(--al-line); border-radius: 16px; padding: 22px 22px 18px; min-width: 0; scroll-margin-top: 76px; }
+  .al-card-h { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .al-n { font-family: var(--al-mono); font-size: .74rem; color: var(--al-muted); }
+  .al-card h2 { font-size: 1.3rem; font-weight: 700; letter-spacing: -.015em; line-height: 1.2; }
+  .al-note { font-family: var(--al-serif); font-size: .98rem; line-height: 1.45; color: var(--al-ink-2); margin: 6px 0 16px; max-width: 68ch; }
+  .al-note b { font-family: var(--al-sans); font-weight: 700; color: var(--al-ink); }
+  .al-figs { display: flex; flex-wrap: wrap; gap: 12px; margin: 0 0 16px; }
+  .al-figs .al-stat { background: var(--al-bg); min-width: 9.5rem; flex: 1 1 9.5rem; padding: 14px 16px; }
+  .al-figs .al-v { font-size: 1.7rem; margin-top: 8px; }
+  .al-h3 { font-size: 1rem; font-weight: 700; letter-spacing: -.01em; margin: 20px 0 10px; }
+  .al-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); gap: 16px; }
+
+  .al-tbl { border: 1px solid var(--al-line); border-radius: 12px; overflow: auto; background: var(--al-panel); }
+  .al-tbl.al-tall { max-height: 27rem; }
+  .al table { width: 100%; border-collapse: collapse; font-size: .9rem; font-variant-numeric: tabular-nums; }
+  .al th { text-align: left; font-weight: 400; font-size: .8rem; color: var(--al-muted); padding: 11px 14px; border-bottom: 1px solid var(--al-line); position: sticky; top: 0; background: var(--al-panel); white-space: nowrap; z-index: 1; }
+  .al td { padding: 11px 14px; border-bottom: 1px solid var(--al-line-soft); vertical-align: top; color: var(--al-ink); }
+  .al tbody tr { transition: background .15s ease; }
+  .al tbody tr:hover { background: var(--al-bg); }
+  .al tr:last-child td { border-bottom: 0; }
+  .al td.num, .al th.num { text-align: right; }
+  .al td.nowrap { white-space: nowrap; }
+  .al .mono { font-family: var(--al-mono); font-size: .8rem; color: var(--al-ink-2); }
+  .al .cc-muted { color: var(--al-muted); }
+  .al .is-bad { font-weight: 700; color: var(--al-ink); }
+  .al .al-v.is-bad { color: var(--al-accent); }
+  .al .is-warn { font-weight: 600; color: var(--al-ink); }
+  .al .is-ok { color: var(--al-ink-2); }
+
+  .al .badge { display: inline-flex; align-items: center; border-radius: 999px; font-family: var(--al-mono); font-size: .64rem; letter-spacing: .1em; text-transform: uppercase; padding: 3px 9px; white-space: nowrap; line-height: 1.3; }
+  .al .b-soft { color: var(--al-ink-2); background: var(--al-line-soft); }
+  .al .b-hot { background: var(--al-accent); color: #fff; }
+  .al .b-ink { background: var(--al-ink); color: var(--al-panel); }
+  .al .b-ok { border: 1px solid var(--al-ink); color: var(--al-ink); padding: 2px 8px; }
+
+  .al-input { width: 100%; max-width: 24rem; border-radius: 10px; background: var(--al-panel); border: 1px solid var(--al-line); padding: 10px 14px; font: inherit; font-size: .92rem; color: var(--al-ink); margin: 0 0 12px; transition: border-color .15s ease; }
+  .al-input::placeholder { color: var(--al-ph); }
+  .al-input:focus { outline: none; border-color: var(--al-ink); box-shadow: 0 0 0 3px rgba(238,74,28,.3); }
+  .al-check { display: inline-flex; align-items: center; gap: 8px; font-size: .85rem; color: var(--al-muted); margin: 0 0 12px; cursor: pointer; }
+  .al-check input { accent-color: var(--al-ink); }
+  .al a.cc-link { color: var(--al-ink); text-decoration: none; font-weight: 600; transition: color .15s ease; }
+  .al a.cc-link:hover { color: var(--al-accent); }
+  .al a.cc-link::after { content: " →"; color: var(--al-muted); font-weight: 400; }
+
+  .cc-fail { display: flex; align-items: center; justify-content: center; gap: 8px; color: var(--al-muted); font-size: .85rem; min-height: 4rem; }
+  .cc-fail::before { content: ""; width: .375rem; height: .375rem; border-radius: 50%; background: var(--al-accent); }
+  .cc-chart { position: relative; min-height: 10rem; }
+  .al-legend { display: flex; gap: 16px; font-size: .8rem; color: var(--al-muted); margin: 0 0 8px; }
+  .al-sw { display: inline-block; width: .7rem; height: .7rem; border-radius: 3px; margin-right: .4rem; vertical-align: -1px; }
+  .cc-tip { position: absolute; pointer-events: none; background: var(--al-panel); border: 1px solid var(--al-line); border-radius: 10px; padding: 8px 12px; font-size: .8rem; color: var(--al-ink); white-space: nowrap; z-index: 2; }
+  .cc-tip-h { color: var(--al-muted); font-family: var(--al-mono); font-size: .72rem; margin-bottom: 2px; }
+
+  .al-foot { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; padding: 24px 0 0; border-top: 1px solid var(--al-line); margin-top: 16px; }
+  .al-foot .al-logo { font-size: 1.1rem; }
+  .al-foot p { font-size: .8rem; color: var(--al-muted); }
+
+  .al [data-dash-source-state=empty] { color: transparent; }
+  .al [data-dash-source-state=refreshing] { opacity: .5; transition: opacity .25s var(--al-ease); }
+
+  @media (max-width: 760px) {
+    .al-wrap, .al-top-in { padding-left: 18px; padding-right: 18px; }
+    .al-hero { grid-template-columns: 1fr; gap: 16px; padding-top: 28px; }
+    .al-studio { display: none; }
+    .al .cc-hide-sm { display: none; }
+  }
+</style>
+
+<div class="al">
+  <header class="al-top">
+    <div class="al-top-in">
+      <span class="al-logo">allerto<b>.</b></span>
+      <span class="al-studio">Centro di comando</span>
+      <nav class="al-nav" aria-label="Sezioni">
+        <a href="#attivita">Attività</a>
+        <a href="#interventi">Interventi</a>
+        <a href="#segnalazioni">Segnalazioni</a>
+        <a href="#morosita">Morosità</a>
+        <a href="#assemblee">Assemblee</a>
+        <a href="#assicurazioni">Polizze</a>
+        <a href="#chiamate">Chiamate</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="al-wrap">
+    <section class="al-hero" id="inizio">
+      <div>
+        <p class="al-eyebrow"><span data-draw="oggi">—</span></p>
+        <h1 class="al-h1">Cosa c'è da fare <em>oggi</em>.</h1>
+      </div>
+      <div>
+        <p class="al-lede">Interventi in ritardo <b data-draw="kpi" data-source="kpi" data-field="INTERVENTI_RITARDO" data-row="0" data-fetchpriority="high">—</b> · chiamate da gestire <b data-draw="ckpi" data-source="chiamate_kpi" data-field="DA_GESTIRE" data-row="0">—</b> · attività da assegnare <b data-draw="akpi" data-source="attivita_kpi" data-field="DA_ASSEGNARE" data-row="0">—</b> · premi scaduti <b data-draw="kpi" data-source="kpi" data-field="PREMI_SCADUTI" data-row="0">—</b> · rate scoperte <b data-draw="mtot" data-source="morosita_tot" data-field="SCOPERTO" data-row="0">—</b></p>
+        <p class="al-meta">Danea aggiornato al <span data-draw="backup">—</span>: quello che aprite oggi in Danea compare domani. Chiamate e attività di Allerto sono in tempo reale.</p>
+      </div>
+    </section>
+
+    <section class="al-stats" aria-label="Riepilogo">
+      <div class="al-stat">
+        <p class="al-l">Segnalazioni aperte</p>
+        <p class="al-v dash-skeleton" data-draw="kpi" data-source="kpi" data-field="APERTE" data-row="0" data-fetchpriority="high">—</p>
+        <p class="al-hint">non ancora chiuse in Danea</p>
+      </div>
+      <div class="al-stat">
+        <p class="al-l">Di cui priorità alta</p>
+        <p class="al-v dash-skeleton" data-draw="kpi" data-source="kpi" data-field="APERTE_ALTA" data-row="0">—</p>
+        <p class="al-hint">alta o urgente</p>
+      </div>
+      <div class="al-stat">
+        <p class="al-l">Interventi in ritardo</p>
+        <p class="al-v dash-skeleton" data-draw="kpi" data-tone="bad" data-source="kpi" data-field="INTERVENTI_RITARDO" data-row="0">—</p>
+        <p class="al-hint">data prevista passata</p>
+      </div>
+      <div class="al-stat">
+        <p class="al-l">Interventi previsti oggi</p>
+        <p class="al-v dash-skeleton" data-draw="kpi" data-tone="warn" data-source="kpi" data-field="INTERVENTI_OGGI" data-row="0">—</p>
+        <p class="al-hint">da confermare col fornitore</p>
+      </div>
+      <div class="al-stat">
+        <p class="al-l">Chiamate da gestire</p>
+        <p class="al-v dash-skeleton" data-draw="ckpi" data-source="chiamate_kpi" data-field="DA_GESTIRE" data-row="0">—</p>
+        <p class="al-hint">sulle ultime 20 del centralino</p>
+      </div>
+      <div class="al-stat">
+        <p class="al-l">Premi in scadenza</p>
+        <p class="al-v dash-skeleton" data-draw="kpi" data-tone="warn" data-source="kpi" data-field="PREMI_60GG" data-row="0">—</p>
+        <p class="al-hint">entro 60 giorni</p>
+      </div>
+    </section>
+
+    <section class="al-card" id="attivita">
+      <div class="al-card-h"><span class="al-n">01</span><h2>Attività</h2></div>
+      <p class="al-note">Le attività aperte in Allerto, dalla più recente: nate dalle chiamate o create dallo studio. Si assegnano e si chiudono nell'app.</p>
+      <div class="al-figs">
+        <div class="al-stat">
+          <p class="al-l">Da assegnare</p>
+          <p class="al-v dash-skeleton" data-draw="akpi" data-source="attivita_kpi" data-field="DA_ASSEGNARE" data-row="0" data-fetchpriority="high">—</p>
+        </div>
+        <div class="al-stat">
+          <p class="al-l">In corso</p>
+          <p class="al-v dash-skeleton" data-draw="akpi" data-source="attivita_kpi" data-field="IN_CORSO" data-row="0">—</p>
+        </div>
+        <div class="al-stat">
+          <p class="al-l">Urgenti aperte</p>
+          <p class="al-v dash-skeleton" data-draw="akpi" data-source="attivita_kpi" data-field="URGENTI_APERTE" data-row="0">—</p>
+        </div>
+        <div class="al-stat">
+          <p class="al-l">Data prevista passata</p>
+          <p class="al-v dash-skeleton" data-draw="akpi" data-source="attivita_kpi" data-field="SCADUTE" data-row="0">—</p>
+        </div>
+      </div>
+      <label class="al-check"><input class="cc-show-closed" type="checkbox"> Mostra anche quelle fatte e annullate</label>
+      <div class="al-tbl al-tall">
+        <table data-source="attivita" data-row-key="id">
+          <thead><tr>
+            <th data-field="creata">Creata</th>
+            <th data-field="titolo">Attività</th>
+            <th data-field="condominio">Condominio</th>
+            <th data-field="priorita">Priorità</th>
+            <th data-field="stato">Stato</th>
+            <th class="cc-hide-sm" data-field="affidataA">Affidata a</th>
+            <th class="cc-hide-sm" data-field="dataPrevista">Prevista</th>
+            <th class="cc-hide-sm" data-field="pratica">Pratica</th>
+          </tr></thead>
+          <tbody data-draw="attivita"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="al-card" id="interventi">
+      <div class="al-card-h"><span class="al-n">02</span><h2>Interventi da seguire</h2></div>
+      <p class="al-note">Interventi non ancora eseguiti su segnalazioni aperte, dal più vecchio. Ritardo in giorni: positivo è in ritardo, zero è previsto oggi, negativo è in programma.</p>
+      <div class="al-tbl">
+        <table data-source="interventi" data-row-key="ID">
+          <thead><tr>
+            <th data-field="PREVISTO">Previsto</th>
+            <th class="num" data-field="GIORNI_RITARDO">Ritardo</th>
+            <th data-field="SEGNALAZIONE">Segnalazione</th>
+            <th data-field="CONDOMINIO">Condominio</th>
+            <th data-field="FORNITORE">Fornitore</th>
+            <th class="cc-hide-sm" data-field="ATTIVITA">Attività</th>
+            <th data-field="TELEFONO">Telefono</th>
+          </tr></thead>
+          <tbody data-draw="interventi"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="al-card" id="segnalazioni">
+      <div class="al-card-h"><span class="al-n">03</span><h2>Segnalazioni aperte</h2></div>
+      <p class="al-note">Tutte le segnalazioni non chiuse in Danea, per priorità e poi dalla più recente.</p>
+      <div class="al-tbl">
+        <table data-source="segnalazioni" data-row-key="N">
+          <thead><tr>
+            <th class="num" data-field="N">N.</th>
+            <th data-field="SEGNALAZIONE">Segnalazione</th>
+            <th data-field="CONDOMINIO">Condominio</th>
+            <th data-field="PRIORITA">Priorità</th>
+            <th class="cc-hide-sm" data-field="TIPO">Tipo</th>
+            <th data-field="APERTA_IL">Aperta il</th>
+            <th class="num cc-hide-sm" data-field="GIORNI">Giorni</th>
+            <th class="cc-hide-sm" data-field="GESTORE">Gestita da</th>
+            <th class="num" data-field="INTERVENTI_APERTI">Interventi aperti</th>
+          </tr></thead>
+          <tbody data-draw="segnalazioni"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="al-card" id="morosita">
+      <div class="al-card-h"><span class="al-n">04</span><h2>Morosità</h2></div>
+      <p class="al-note">Rate scadute a oggi e non coperte dai versamenti, negli esercizi in corso: l'ordinario più recente di ogni condominio e gli straordinari aperti. I crediti dell'esercizio precedente sono già scalati.</p>
+      <div class="al-figs">
+        <div class="al-stat">
+          <p class="al-l">Scoperto totale</p>
+          <p class="al-v dash-skeleton" data-draw="mtot" data-source="morosita_tot" data-field="SCOPERTO" data-row="0">—</p>
+        </div>
+        <div class="al-stat">
+          <p class="al-l">Posizioni con rate scoperte</p>
+          <p class="al-v dash-skeleton" data-draw="mtot" data-source="morosita_tot" data-field="MOROSI" data-row="0">—</p>
+        </div>
+      </div>
+      <h3 class="al-h3">Scoperto per condominio</h3>
+      <div class="cc-chart dash-skeleton" data-draw="morosita-cond" data-source="morosita_condominio"></div>
+      <h3 class="al-h3">Condòmini con rate scoperte</h3>
+      <input class="al-input cc-search" type="search" placeholder="Cerca condòmino, condominio o esercizio" aria-label="Cerca tra i morosi">
+      <div class="al-tbl al-tall">
+        <table data-source="morosi" data-row-key="ES_ID,ANAGRID">
+          <thead><tr>
+            <th data-field="CONDOMINO">Condòmino</th>
+            <th data-field="CONDOMINIO">Condominio</th>
+            <th data-field="ESERCIZIO">Esercizio</th>
+            <th class="num cc-hide-sm" data-field="DOVUTO_SCADUTO">Rate scadute</th>
+            <th class="num cc-hide-sm" data-field="VERSATO">Versato</th>
+            <th class="num" data-field="SCOPERTO">Scoperto</th>
+          </tr></thead>
+          <tbody class="cc-morosi" data-draw="morosi"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="al-grid">
+      <section class="al-card" id="assemblee">
+        <div class="al-card-h"><span class="al-n">05</span><h2>Assemblee</h2></div>
+        <p class="al-note">Convocate e da tenere: <b data-draw="kpi" data-tone="warn" data-source="kpi" data-field="ASSEMBLEE_CONVOCATE" data-row="0">—</b>. Sotto, tutte quelle in archivio, dalla più recente.</p>
+        <div class="al-tbl">
+          <table data-source="assemblee" data-row-key="ID">
+            <thead><tr>
+              <th data-field="SECONDA_CONV">Data</th>
+              <th data-field="CONDOMINIO">Condominio</th>
+              <th data-field="TIPO">Tipo</th>
+              <th class="cc-hide-sm" data-field="ORA">Ora</th>
+              <th data-field="STATO">Stato</th>
+            </tr></thead>
+            <tbody data-draw="assemblee"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="al-card" id="assicurazioni">
+        <div class="al-card-h"><span class="al-n">06</span><h2>Premi assicurativi</h2></div>
+        <p class="al-note">Scadenza del premio per polizza. Giorni negativi: premio già scaduto.</p>
+        <div class="al-tbl">
+          <table data-source="assicurazioni" data-row-key="POLIZZA">
+            <thead><tr>
+              <th data-field="CONDOMINIO">Condominio</th>
+              <th data-field="POLIZZA">Polizza</th>
+              <th data-field="SCADENZA_PREMIO">Scadenza premio</th>
+              <th class="num" data-field="GIORNI">Giorni</th>
+            </tr></thead>
+            <tbody data-draw="assicurazioni"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <div class="al-grid">
+      <section class="al-card" id="condomini">
+        <div class="al-card-h"><span class="al-n">07</span><h2>Segnalazioni per condominio</h2></div>
+        <p class="al-note">Aperte e chiuse, da tutto l'archivio Danea.</p>
+        <div class="al-legend"><span><span class="al-sw" style="background:#141413"></span>Aperte</span><span><span class="al-sw" style="background:#DCD8CD"></span>Chiuse</span></div>
+        <div class="cc-chart dash-skeleton" data-draw="condomini" data-source="per_condominio"></div>
+      </section>
+
+      <section class="al-card" id="chiamate">
+        <div class="al-card-h"><span class="al-n">08</span><h2>Chiamate del centralino</h2></div>
+        <p class="al-note">Le ultime 20 chiamate risposte da Allerto, dalla più recente.</p>
+        <div class="al-tbl al-tall">
+          <table data-source="chiamate" data-row-key="id">
+            <thead><tr>
+              <th data-field="quando">Quando</th>
+              <th data-field="chi">Chi</th>
+              <th class="cc-hide-sm" data-field="condominio">Condominio</th>
+              <th data-source="chiamate_stato" data-field="stato">Stato</th>
+              <th class="cc-hide-sm" data-field="scontento">Tono</th>
+            </tr></thead>
+            <tbody data-draw="chiamate"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <footer class="al-foot">
+      <span class="al-logo">allerto<b>.</b></span>
+      <p>Centro di comando dello studio · dati da Danea e dal centralino Allerto</p>
+    </footer>
+  </div>
+</div>
+
+<script>
+  dash.loader('kpi', {
+    description: 'Le righe della risposta SQL di Allerto, con la data del backup Danea',
+    fn: ({ answer }) => {
+      const a = typeof answer === 'string' ? JSON.parse(answer) : answer;
+      if (!a || !Array.isArray(a.righe)) throw new Error((a && (a.errore || a.error || a.message)) || 'Risposta senza righe');
+      return { data: a.righe, columns: a.righe.length ? Object.keys(a.righe[0]) : [], meta: a.backup ? [{ label: 'Backup Danea', value: String(a.backup) }] : [] };
+    },
+  });
+  dash.loader('segnalazioni', {
+    description: 'Le righe della risposta SQL di Allerto, con la data del backup Danea',
+    fn: ({ answer }) => {
+      const a = typeof answer === 'string' ? JSON.parse(answer) : answer;
+      if (!a || !Array.isArray(a.righe)) throw new Error((a && (a.errore || a.error || a.message)) || 'Risposta senza righe');
+      return { data: a.righe, columns: a.righe.length ? Object.keys(a.righe[0]) : [], meta: a.backup ? [{ label: 'Backup Danea', value: String(a.backup) }] : [] };
+    },
+  });
+  dash.loader('interventi', {
+    description: 'Le righe della risposta SQL di Allerto, con la data del backup Danea',
+    fn: ({ answer }) => {
+      const a = typeof answer === 'string' ? JSON.parse(answer) : answer;
+      if (!a || !Array.isArray(a.righe)) throw new Error((a && (a.errore || a.error || a.message)) || 'Risposta senza righe');
+      return { data: a.righe, columns: a.righe.length ? Object.keys(a.righe[0]) : [], meta: a.backup ? [{ label: 'Backup Danea', value: String(a.backup) }] : [] };
+    },
+  });
+  dash.loader('per_condominio', {
+    description: 'Le righe della risposta SQL di Allerto, con la data del backup Danea',
+    fn: ({ answer }) => {
+      const a = typeof answer === 'string' ? JSON.parse(answer) : answer;
+      if (!a || !Array.isArray(a.righe)) throw new Error((a && (a.errore || a.error || a.message)) || 'Risposta senza righe');
+      return { data: a.righe, columns: a.righe.length ? Object.keys(a.righe[0]) : [], meta: a.backup ? [{ label: 'Backup Danea', value: String(a.backup) }] : [] };
+    },
+  });
+  dash.loader('assicurazioni', {
+    description: 'Le righe della risposta SQL di Allerto, con la data del backup Danea',
+    fn: ({ answer }) => {
+      const a = typeof answer === 'string' ? JSON.parse(answer) : answer;
+      if (!a || !Array.isArray(a.righe)) throw new Error((a && (a.errore || a.error || a.message)) || 'Risposta senza righe');
+      return { data: a.righe, columns: a.righe.length ? Object.keys(a.righe[0]) : [], meta: a.backup ? [{ label: 'Backup Danea', value: String(a.backup) }] : [] };
+    },
+  });
+  dash.loader('morosita_tot', {
+    description: 'Le righe della risposta SQL di Allerto, con la data del backup Danea',
+    fn: ({ answer }) => {
+      const a = typeof answer === 'string' ? JSON.parse(answer) : answer;
+      if (!a || !Array.isArray(a.righe)) throw new Error((a && (a.errore || a.error || a.message)) || 'Risposta senza righe');
+      return { data: a.righe, columns: a.righe.length ? Object.keys(a.righe[0]) : [], meta: a.backup ? [{ label: 'Backup Danea', value: String(a.backup) }] : [] };
+    },
+  });
+  dash.loader('morosita_condominio', {
+    description: 'Le righe della risposta SQL di Allerto, con la data del backup Danea',
+    fn: ({ answer }) => {
+      const a = typeof answer === 'string' ? JSON.parse(answer) : answer;
+      if (!a || !Array.isArray(a.righe)) throw new Error((a && (a.errore || a.error || a.message)) || 'Risposta senza righe');
+      return { data: a.righe, columns: a.righe.length ? Object.keys(a.righe[0]) : [], meta: a.backup ? [{ label: 'Backup Danea', value: String(a.backup) }] : [] };
+    },
+  });
+  dash.loader('morosi', {
+    description: 'Le righe della risposta SQL di Allerto, con la data del backup Danea',
+    fn: ({ answer }) => {
+      const a = typeof answer === 'string' ? JSON.parse(answer) : answer;
+      if (!a || !Array.isArray(a.righe)) throw new Error((a && (a.errore || a.error || a.message)) || 'Risposta senza righe');
+      return { data: a.righe, columns: a.righe.length ? Object.keys(a.righe[0]) : [], meta: a.backup ? [{ label: 'Backup Danea', value: String(a.backup) }] : [] };
+    },
+  });
+  dash.loader('assemblee', {
+    description: 'Le righe della risposta SQL di Allerto, con la data del backup Danea',
+    fn: ({ answer }) => {
+      const a = typeof answer === 'string' ? JSON.parse(answer) : answer;
+      if (!a || !Array.isArray(a.righe)) throw new Error((a && (a.errore || a.error || a.message)) || 'Risposta senza righe');
+      return { data: a.righe, columns: a.righe.length ? Object.keys(a.righe[0]) : [], meta: a.backup ? [{ label: 'Backup Danea', value: String(a.backup) }] : [] };
+    },
+  });
+  dash.loader('attivita', {
+    description: 'L’elenco "attivita" della risposta di Allerto, una riga per attività',
+    fn: ({ answer }) => {
+      const a = typeof answer === 'string' ? JSON.parse(answer) : answer;
+      if (!a || !Array.isArray(a.attivita)) throw new Error((a && (a.errore || a.error || a.message)) || 'Risposta senza attività');
+      return { data: a.attivita, columns: ['id', 'creata', 'titolo', 'condominio', 'priorita', 'stato', 'affidataA', 'dataPrevista', 'pratica', 'link'], cut: !!a.altre };
+    },
+  });
+  dash.calc('attivita_kpi', {
+    inputs: ['attivita'],
+    title: 'Attività aperte',
+    description: 'Attività da assegnare, in corso, urgenti non chiuse e con data prevista già passata (fatte e annullate escluse).',
+    fn: (attivita) => {
+      const aperte = attivita.filter((x) => x.stato !== 'fatta' && x.stato !== 'annullata');
+      const oggi = new Date().toISOString().slice(0, 10);
+      return [{
+        DA_ASSEGNARE: aperte.filter((x) => x.stato === 'da assegnare').length,
+        IN_CORSO: aperte.filter((x) => x.stato === 'in corso').length,
+        URGENTI_APERTE: aperte.filter((x) => x.priorita === 'urgente').length,
+        SCADUTE: aperte.filter((x) => x.dataPrevista && x.dataPrevista < oggi).length,
+      }];
+    },
+  });
+  dash.loader('chiamate', {
+    description: 'L’elenco "chiamate" della risposta di Allerto, una riga per chiamata',
+    fn: ({ answer }) => {
+      const a = typeof answer === 'string' ? JSON.parse(answer) : answer;
+      if (!a || !Array.isArray(a.chiamate)) throw new Error((a && (a.errore || a.error || a.message)) || 'Risposta senza chiamate');
+      return { data: a.chiamate, columns: ['id', 'quando', 'chi', 'condominio', 'cosa', 'urgente', 'gestita', 'suGestionale', 'scontento'] };
+    },
+  });
+
+  dash.calc('chiamate_kpi', {
+    inputs: ['chiamate'],
+    title: 'Chiamate da gestire',
+    description: 'Quante delle ultime chiamate non sono ancora segnate come gestite.',
+    fn: (chiamate) => [{ DA_GESTIRE: chiamate.filter((c) => !c.gestita).length, TOTALE: chiamate.length }],
+  });
+  dash.calc('chiamate_stato', {
+    inputs: ['chiamate'],
+    title: 'Stato di ogni chiamata',
+    description: 'Gestita o da gestire, secondo il campo "gestita" della chiamata.',
+    fn: (chiamate) => chiamate.map((c) => ({ id: c.id, stato: c.gestita ? 'Gestita' : 'Da gestire' })),
+  });
+
+  const ccNum = (v) => (v == null || v === '' ? '—' : d3.format(',')(Number(v)));
+  const ccEur = (v, whole) => (v == null || v === '' ? '—' : new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', minimumFractionDigits: whole ? 0 : 2, maximumFractionDigits: whole ? 0 : 2 }).format(Number(v)));
+  const ccDate = (s) => {
+    if (!s) return '';
+    const d = new Date(String(s).slice(0, 10) + 'T00:00:00Z');
+    return isNaN(d) ? String(s) : new Intl.DateTimeFormat('it-IT', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' }).format(d);
+  };
+  const ccFailRow = (tbody, cols) => {
+    const tr = document.createElement('tr');
+    const td = document.createElement('td');
+    td.colSpan = cols;
+    const div = document.createElement('div');
+    div.className = 'cc-fail';
+    div.textContent = 'Caricamento non riuscito';
+    td.append(div);
+    tr.append(td);
+    tbody.replaceChildren(tr);
+  };
+  const ccCell = (tr, text, cls) => {
+    const td = document.createElement('td');
+    if (cls) td.className = cls;
+    td.textContent = text == null ? '' : String(text);
+    tr.append(td);
+    return td;
+  };
+  const ccBadge = (tr, text, kind) => {
+    const td = document.createElement('td');
+    const b = document.createElement('span');
+    b.className = 'badge ' + kind;
+    b.textContent = text == null ? '' : String(text);
+    td.append(b);
+    tr.append(td);
+    return td;
+  };
+
+  dash.draw('oggi', (el) => {
+    const s = new Intl.DateTimeFormat('it-IT', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).format(new Date());
+    el.textContent = s.charAt(0).toUpperCase() + s.slice(1);
+  });
+
+  const ccGo = (id) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+    dash.setLink(id);
+  };
+  document.querySelectorAll('.al-nav a').forEach((a) => a.addEventListener('click', (event) => {
+    event.preventDefault();
+    ccGo((a.getAttribute('href') || '').slice(1));
+  }));
+  if (location.hash.length > 1 && document.getElementById(location.hash.slice(1))) setTimeout(() => ccGo(location.hash.slice(1)), 300);
+
+  const ccTone = (el, n, tone) => {
+    el.classList.remove('is-bad', 'is-warn');
+    if (tone && Number(n) > 0) el.classList.add(tone === 'bad' ? 'is-bad' : 'is-warn');
+  };
+
+  dash.draw('kpi', (el) => {
+    const d = dash.data('kpi');
+    el.classList.toggle('dash-skeleton', d.status === 'loading');
+    if (d.status !== 'ok' || !d.data.length) { el.textContent = '—'; return; }
+    const v = d.data[0][el.dataset.field];
+    el.textContent = ccNum(v);
+    ccTone(el, v, el.dataset.tone || (el.tagName === 'B' ? 'bad' : ''));
+  });
+
+  dash.draw('ckpi', (el) => {
+    const d = dash.data('chiamate_kpi');
+    el.classList.toggle('dash-skeleton', d.status === 'loading');
+    if (d.status !== 'ok' || !d.data.length) { el.textContent = '—'; return; }
+    const v = d.data[0][el.dataset.field];
+    el.textContent = ccNum(v);
+    ccTone(el, v, 'warn');
+  });
+
+  dash.draw('backup', (el) => {
+    const d = dash.data('kpi');
+    const m = d.status === 'ok' ? (d.meta || []).find((x) => x.label === 'Backup Danea') : null;
+    if (!m) { el.textContent = '—'; return; }
+    const t = new Date(m.value);
+    el.textContent = isNaN(t) ? m.value : new Intl.DateTimeFormat('it-IT', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' }).format(t);
+  });
+
+  dash.draw('akpi', (el) => {
+    const d = dash.data('attivita_kpi');
+    el.classList.toggle('dash-skeleton', d.status === 'loading');
+    if (d.status !== 'ok' || !d.data.length) { el.textContent = '—'; return; }
+    const v = d.data[0][el.dataset.field];
+    el.textContent = ccNum(v);
+    ccTone(el, v, el.dataset.field === 'IN_CORSO' ? '' : el.dataset.field === 'DA_ASSEGNARE' ? 'warn' : 'bad');
+  });
+
+  document.querySelectorAll('.cc-show-closed').forEach((box) => box.addEventListener('change', () => dash.draw('attivita')));
+
+  dash.draw('attivita', (tbody) => {
+    const d = dash.data('attivita');
+    if (d.status === 'error') return ccFailRow(tbody, 8);
+    if (d.status !== 'ok') { tbody.replaceChildren(); return; }
+    const showClosed = [...document.querySelectorAll('.cc-show-closed')].some((b) => b.checked);
+    const oggi = new Date().toISOString().slice(0, 10);
+    tbody.replaceChildren(...d.data.map((r) => {
+      const chiusa = r.stato === 'fatta' || r.stato === 'annullata';
+      const tr = document.createElement('tr');
+      tr.dataset.key = String(r.id);
+      tr.hidden = chiusa && !showClosed;
+      ccCell(tr, ccDate(r.creata), 'nowrap mono');
+      const tdT = ccCell(tr, '');
+      if (r.link && /^https:\/\/app\.allerto\.cloud\//.test(r.link)) {
+        const a = document.createElement('a');
+        a.className = 'cc-link';
+        a.href = r.link;
+        a.target = '_blank';
+        a.rel = 'noopener';
+        a.textContent = r.titolo;
+        tdT.append(a);
+      } else tdT.textContent = r.titolo;
+      ccCell(tr, r.condominio || '', r.condominio ? '' : 'cc-muted');
+      const tdP = ccCell(tr, '');
+      const pill = document.createElement('span');
+      pill.className = 'badge ' + (r.priorita === 'urgente' ? 'b-hot' : 'b-soft');
+      pill.textContent = r.priorita;
+      tdP.append(pill);
+      ccBadge(tr, r.stato, r.stato === 'da assegnare' ? 'b-ink' : r.stato === 'fatta' ? 'b-ok' : 'b-soft');
+      ccCell(tr, r.affidataA || '', 'cc-hide-sm ' + (r.affidataA ? '' : 'cc-muted'));
+      ccCell(tr, r.dataPrevista ? ccDate(r.dataPrevista) : '', 'nowrap mono cc-hide-sm ' + (!chiusa && r.dataPrevista && r.dataPrevista < oggi ? 'is-bad' : ''));
+      ccCell(tr, r.pratica || '', 'cc-hide-sm mono');
+      return tr;
+    }));
+  });
+
+  dash.draw('interventi', (tbody) => {
+    const d = dash.data('interventi');
+    if (d.status === 'error') return ccFailRow(tbody, 7);
+    if (d.status !== 'ok') { tbody.replaceChildren(); return; }
+    tbody.replaceChildren(...d.data.map((r) => {
+      const tr = document.createElement('tr');
+      tr.dataset.key = String(r.ID);
+      ccCell(tr, ccDate(r.PREVISTO), 'nowrap mono');
+      const late = Number(r.GIORNI_RITARDO);
+      ccCell(tr, ccNum(late), 'num ' + (late > 0 ? 'is-bad' : late === 0 ? 'is-warn' : 'cc-muted'));
+      ccCell(tr, r.SEGNALAZIONE);
+      ccCell(tr, r.CONDOMINIO);
+      ccCell(tr, r.FORNITORE);
+      ccCell(tr, r.ATTIVITA, 'cc-hide-sm cc-muted');
+      ccCell(tr, r.TELEFONO, 'nowrap mono');
+      return tr;
+    }));
+  });
+
+  dash.draw('segnalazioni', (tbody) => {
+    const d = dash.data('segnalazioni');
+    if (d.status === 'error') return ccFailRow(tbody, 9);
+    if (d.status !== 'ok') { tbody.replaceChildren(); return; }
+    tbody.replaceChildren(...d.data.map((r) => {
+      const tr = document.createElement('tr');
+      ccCell(tr, r.N, 'num mono');
+      ccCell(tr, r.SEGNALAZIONE);
+      ccCell(tr, r.CONDOMINIO);
+      const td = ccCell(tr, '');
+      const pill = document.createElement('span');
+      pill.className = 'badge ' + (Number(r.PRIO) >= 4 ? 'b-hot' : Number(r.PRIO) === 3 ? 'b-ink' : 'b-soft');
+      pill.textContent = r.PRIORITA;
+      td.append(pill);
+      ccCell(tr, r.TIPO, 'cc-hide-sm cc-muted');
+      ccCell(tr, ccDate(r.APERTA_IL), 'nowrap mono');
+      ccCell(tr, ccNum(r.GIORNI), 'num cc-hide-sm');
+      ccCell(tr, r.GESTORE, 'cc-hide-sm cc-muted');
+      const n = Number(r.INTERVENTI_APERTI);
+      ccCell(tr, ccNum(n), 'num ' + (n === 0 ? 'is-warn' : ''));
+      return tr;
+    }));
+  });
+
+  dash.draw('assicurazioni', (tbody) => {
+    const d = dash.data('assicurazioni');
+    if (d.status === 'error') return ccFailRow(tbody, 4);
+    if (d.status !== 'ok') { tbody.replaceChildren(); return; }
+    tbody.replaceChildren(...d.data.map((r) => {
+      const tr = document.createElement('tr');
+      ccCell(tr, r.CONDOMINIO);
+      ccCell(tr, r.POLIZZA, 'mono');
+      ccCell(tr, ccDate(r.SCADENZA_PREMIO), 'nowrap mono');
+      const g = Number(r.GIORNI);
+      ccCell(tr, ccNum(g), 'num ' + (g < 0 ? 'is-bad' : g <= 60 ? 'is-warn' : ''));
+      return tr;
+    }));
+  });
+
+  dash.draw('chiamate', (tbody) => {
+    const d = dash.data('chiamate');
+    const s = dash.data('chiamate_stato');
+    if (d.status === 'error') return ccFailRow(tbody, 5);
+    if (d.status !== 'ok') { tbody.replaceChildren(); return; }
+    const stato = new Map((s.status === 'ok' ? s.data : []).map((x) => [x.id, x.stato]));
+    tbody.replaceChildren(...d.data.map((r) => {
+      const tr = document.createElement('tr');
+      tr.dataset.key = String(r.id);
+      ccCell(tr, r.quando, 'nowrap mono');
+      ccCell(tr, r.chi);
+      ccCell(tr, r.condominio || '', 'cc-hide-sm ' + (r.condominio ? '' : 'cc-muted'));
+      const st = stato.get(r.id) || '';
+      if (st) ccBadge(tr, st, st === 'Da gestire' ? 'b-ink' : 'b-ok'); else ccCell(tr, '');
+      ccCell(tr, r.scontento || '', 'cc-hide-sm ' + (r.scontento ? 'is-warn' : ''));
+      return tr;
+    }));
+  });
+
+  const ccBars = (el, d, opts) => {
+    el.replaceChildren();
+    el.classList.toggle('dash-skeleton', d.status === 'loading');
+    if (d.status === 'error') {
+      const f = document.createElement('div');
+      f.className = 'cc-fail';
+      f.textContent = 'Caricamento non riuscito';
+      el.append(f);
+      return;
+    }
+    if (d.status !== 'ok' || !d.data.length) return;
+    const rows = d.data;
+    const W = Math.max(260, el.clientWidth || 320);
+    const rowH = 36;
+    const H = rows.length * rowH + 4;
+    const svg = d3.select(el).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('role', 'img').attr('aria-label', opts.label);
+    const measure = svg.append('text').attr('font-size', 12).style('font-family', 'var(--al-sans)');
+    const textW = (t) => { measure.text(t); return measure.node().getComputedTextLength(); };
+    const lw = Math.ceil(d3.max(rows, (r) => textW(r.CONDOMINIO || ''))) + 12;
+    const ew = Math.ceil(d3.max(rows, (r) => textW(opts.end(r)))) + 8;
+    measure.remove();
+    const total = (r) => d3.sum(opts.parts, (p) => Number(r[p.field]) || 0);
+    const maxV = d3.max(rows, total) || 1;
+    const x = d3.scaleLinear([0, maxV], [lw, Math.max(lw + 40, W - ew)]);
+    const tip = document.createElement('div');
+    tip.className = 'cc-tip';
+    tip.hidden = true;
+    el.append(tip);
+    const g = svg.selectAll('g.row').data(rows).join('g').attr('class', 'row').attr('transform', (r, i) => `translate(0, ${i * rowH})`);
+    g.append('text').attr('x', 0).attr('y', rowH / 2).attr('dy', '0.35em').attr('font-size', 12).style('font-family', 'var(--al-sans)').style('fill', '#141413').text((r) => r.CONDOMINIO);
+    opts.parts.forEach((p, i) => {
+      const before = (r) => d3.sum(opts.parts.slice(0, i), (q) => Number(r[q.field]) || 0);
+      g.append('rect').attr('x', (r) => x(before(r))).attr('y', 9).attr('height', rowH - 18).attr('rx', 4)
+        .attr('width', (r) => Math.max(0, x(before(r) + (Number(r[p.field]) || 0)) - x(before(r)))).style('fill', p.color);
+    });
+    g.append('text').attr('x', (r) => x(total(r)) + 6).attr('y', rowH / 2).attr('dy', '0.35em').attr('font-size', 12).style('font-family', 'var(--al-sans)').style('fill', '#6E6962').text(opts.end);
+    g.append('rect').attr('x', 0).attr('y', 0).attr('width', W).attr('height', rowH).style('fill', 'transparent')
+      .on('mousemove', (event, r) => {
+        tip.hidden = false;
+        tip.replaceChildren();
+        const h = document.createElement('div');
+        h.className = 'cc-tip-h';
+        h.textContent = `${r.CONDOMINIO} · ${r.CITTA || ''}`;
+        tip.append(h, ...opts.tip(r).map((line) => { const b = document.createElement('div'); b.textContent = line; return b; }));
+        const [mx, my] = d3.pointer(event, el);
+        tip.style.left = Math.min(Math.max(0, mx + 12), el.clientWidth - tip.offsetWidth) + 'px';
+        tip.style.top = (my + 12) + 'px';
+      })
+      .on('mouseleave', () => { tip.hidden = true; });
+  };
+
+  dash.draw('condomini', (el) => ccBars(el, dash.data('per_condominio'), {
+    label: 'Segnalazioni aperte e chiuse per condominio',
+    parts: [{ field: 'APERTE', color: '#141413' }, { field: 'CHIUSE', color: '#DCD8CD' }],
+    end: (r) => `${r.APERTE} aperte · ${r.CHIUSE} chiuse`,
+    tip: (r) => [`${r.APERTE} aperte, ${r.CHIUSE} chiuse`],
+  }));
+
+  dash.draw('morosita-cond', (el) => ccBars(el, dash.data('morosita_condominio'), {
+    label: 'Scoperto delle rate per condominio',
+    parts: [{ field: 'SCOPERTO', color: '#141413' }],
+    end: (r) => `${ccEur(r.SCOPERTO, true)} · ${r.MOROSI} condòmini`,
+    tip: (r) => [`Scoperto ${ccEur(r.SCOPERTO)}`, `Rate scadute ${ccEur(r.DOVUTO_SCADUTO)}`, `Versato ${ccEur(r.VERSATO)}`, `${r.MOROSI} condòmini con rate scoperte`],
+  }));
+
+  dash.draw('mtot', (el) => {
+    const d = dash.data('morosita_tot');
+    el.classList.toggle('dash-skeleton', d.status === 'loading');
+    if (d.status !== 'ok' || !d.data.length) { el.textContent = '—'; return; }
+    const v = d.data[0][el.dataset.field];
+    el.textContent = el.dataset.field === 'SCOPERTO' ? ccEur(v, true) : ccNum(v);
+  });
+
+  const ccFilterMorosi = () => {
+    const q = (document.querySelector('.cc-search')?.value || '').trim().toLowerCase();
+    document.querySelectorAll('.cc-morosi tr').forEach((tr) => { tr.hidden = !!q && !tr.textContent.toLowerCase().includes(q); });
+  };
+  document.querySelectorAll('.cc-search').forEach((input) => input.addEventListener('input', ccFilterMorosi));
+
+  dash.draw('morosi', (tbody) => {
+    const d = dash.data('morosi');
+    if (d.status === 'error') return ccFailRow(tbody, 6);
+    if (d.status !== 'ok') { tbody.replaceChildren(); return; }
+    tbody.replaceChildren(...d.data.map((r) => {
+      const tr = document.createElement('tr');
+      tr.dataset.key = encodeURIComponent(String(r.ES_ID)) + ',' + encodeURIComponent(String(r.ANAGRID));
+      ccCell(tr, r.CONDOMINO);
+      ccCell(tr, r.CONDOMINIO);
+      ccCell(tr, r.ESERCIZIO, 'cc-muted');
+      ccCell(tr, ccEur(r.DOVUTO_SCADUTO), 'num nowrap cc-hide-sm');
+      ccCell(tr, ccEur(r.VERSATO), 'num nowrap cc-hide-sm');
+      ccCell(tr, ccEur(r.SCOPERTO), 'num nowrap is-bad');
+      return tr;
+    }));
+    ccFilterMorosi();
+  });
+
+  dash.draw('assemblee', (tbody) => {
+    const d = dash.data('assemblee');
+    if (d.status === 'error') return ccFailRow(tbody, 5);
+    if (d.status !== 'ok') { tbody.replaceChildren(); return; }
+    tbody.replaceChildren(...d.data.map((r) => {
+      const tr = document.createElement('tr');
+      tr.dataset.key = String(r.ID);
+      ccCell(tr, ccDate(r.SECONDA_CONV), 'nowrap mono');
+      ccCell(tr, r.CONDOMINIO);
+      ccCell(tr, r.TIPO, 'cc-muted');
+      ccCell(tr, r.ORA, 'cc-hide-sm mono');
+      ccBadge(tr, r.STATO, r.STATO === 'Convocata' ? 'b-ink' : r.STATO === 'Tenuta' ? 'b-ok' : 'b-soft');
+      return tr;
+    }));
+  });
+</script>

@@ -1,0 +1,138 @@
+{
+  "versione": "0.1.0",
+  "dataset": {
+    "kpi": {
+      "title": "Riepilogo segnalazioni e scadenze",
+      "description": "Conteggi del giorno: segnalazioni aperte, interventi in ritardo o previsti oggi, premi assicurativi scaduti o in scadenza, assemblee convocate e non ancora tenute. Legge TSEGNALAZ, TSEGNALAZ_INTERVENTI, TCONDGEN_ASSICURAZIONI e TASSEMBLEE dall'archivio Danea.",
+      "source": {
+        "args": {
+          "query": "SELECT (SELECT COUNT(*) FROM TSEGNALAZ WHERE STATO <> 3) AS APERTE, (SELECT COUNT(*) FROM TSEGNALAZ WHERE STATO <> 3 AND PRIORITA >= 3) AS APERTE_ALTA, (SELECT COUNT(*) FROM TSEGNALAZ_INTERVENTI I JOIN TSEGNALAZ S ON S.ID = I.SEGNALAZID WHERE S.STATO <> 3 AND I.DATA_ESECUZ_ON = 0 AND CAST(I.DATA_PREVISTA_ESECUZIONE AS DATE) < CURRENT_DATE) AS INTERVENTI_RITARDO, (SELECT COUNT(*) FROM TSEGNALAZ_INTERVENTI I JOIN TSEGNALAZ S ON S.ID = I.SEGNALAZID WHERE S.STATO <> 3 AND I.DATA_ESECUZ_ON = 0 AND CAST(I.DATA_PREVISTA_ESECUZIONE AS DATE) = CURRENT_DATE) AS INTERVENTI_OGGI, (SELECT COUNT(*) FROM TCONDGEN_ASSICURAZIONI A WHERE CAST(A.SCAD_PREMIO AS DATE) < CURRENT_DATE) AS PREMI_SCADUTI, (SELECT COUNT(*) FROM TCONDGEN_ASSICURAZIONI A WHERE CAST(A.SCAD_PREMIO AS DATE) BETWEEN CURRENT_DATE AND CURRENT_DATE + 60) AS PREMI_60GG, (SELECT COUNT(*) FROM TASSEMBLEE A WHERE CAST(A.SE_CONV_DATA AS DATE) >= CURRENT_DATE AND A.INIZIATA_1_ON = 0 AND A.INIZIATA_2_ON = 0) AS ASSEMBLEE_CONVOCATE FROM RDB$DATABASE"
+        },
+        "connector": "allerto-brain",
+        "kind": "query",
+        "tool": "sql"
+      }
+    },
+    "attivita": {
+      "title": "Attività dello studio",
+      "description": "Le ultime 50 attività create in Allerto (aperte, fatte e annullate), con condominio, priorità, stato, fornitore affidatario, data prevista e pratica Danea. Legge le attività dello studio in Allerto.",
+      "source": {
+        "args": {
+          "limite": 50,
+          "stato": "tutte"
+        },
+        "connector": "allerto-brain",
+        "kind": "query",
+        "tool": "attivita"
+      }
+    },
+    "interventi": {
+      "title": "Interventi da eseguire",
+      "description": "Interventi non ancora eseguiti su segnalazioni aperte, con fornitore, telefono e giorni di ritardo sulla data prevista. Legge TSEGNALAZ_INTERVENTI, TSEGNALAZ, TCONDOMINI_GENERALE e TANAGRAFICA.",
+      "source": {
+        "args": {
+          "query": "SELECT I.ID, I.SEGNALAZID AS N, TRIM(S.TITOLO) AS SEGNALAZIONE, TRIM(G.INTESTAZIONE) AS CONDOMINIO, TRIM(F.DESCR) AS FORNITORE, TRIM(F.FORNITOREATTIVITA) AS ATTIVITA, TRIM(COALESCE(F.TEL2, F.TEL1)) AS TELEFONO, CAST(I.DATA_PREVISTA_ESECUZIONE AS DATE) AS PREVISTO, CURRENT_DATE - CAST(I.DATA_PREVISTA_ESECUZIONE AS DATE) AS GIORNI_RITARDO FROM TSEGNALAZ_INTERVENTI I JOIN TSEGNALAZ S ON S.ID = I.SEGNALAZID LEFT JOIN TCONDOMINI_GENERALE G ON G.ID = S.CONDGENID LEFT JOIN TANAGRAFICA F ON F.ID = I.FORNITOREID WHERE I.DATA_ESECUZ_ON = 0 AND S.STATO <> 3 ORDER BY I.DATA_PREVISTA_ESECUZIONE"
+        },
+        "connector": "allerto-brain",
+        "kind": "query",
+        "tool": "sql"
+      }
+    },
+    "segnalazioni": {
+      "title": "Segnalazioni aperte",
+      "description": "Ogni segnalazione non chiusa (stato diverso da 3), con condominio, tipo, priorità, gestore e interventi ancora da eseguire. Legge TSEGNALAZ, TCONDOMINI_GENERALE, TSEGNALAZ_TIPO e TSEGNALAZ_INTERVENTI.",
+      "source": {
+        "args": {
+          "query": "SELECT S.ID AS N, TRIM(S.TITOLO) AS SEGNALAZIONE, TRIM(G.INTESTAZIONE) AS CONDOMINIO, TRIM(T.DESCR) AS TIPO, CASE S.PRIORITA WHEN 4 THEN 'Urgente' WHEN 3 THEN 'Alta' WHEN 2 THEN 'Normale' ELSE 'Bassa' END AS PRIORITA, S.PRIORITA AS PRIO, CAST(S.DATA_APERTURA AS DATE) AS APERTA_IL, CURRENT_DATE - CAST(S.DATA_APERTURA AS DATE) AS GIORNI, TRIM(S.OPERATORE_GEST) AS GESTORE, (SELECT COUNT(*) FROM TSEGNALAZ_INTERVENTI I WHERE I.SEGNALAZID = S.ID AND I.DATA_ESECUZ_ON = 0) AS INTERVENTI_APERTI FROM TSEGNALAZ S LEFT JOIN TCONDOMINI_GENERALE G ON G.ID = S.CONDGENID LEFT JOIN TSEGNALAZ_TIPO T ON T.ID = S.TIPOSEGNALAZID WHERE S.STATO <> 3 ORDER BY S.PRIORITA DESC, S.DATA_APERTURA DESC"
+        },
+        "connector": "allerto-brain",
+        "kind": "query",
+        "tool": "sql"
+      }
+    },
+    "morosita_tot": {
+      "title": "Morosità totale",
+      "description": "Somma delle rate scadute non coperte da versamenti (al netto dei crediti dell'esercizio prima) e numero di posizioni scoperte, negli esercizi in corso: l'ordinario più recente di ogni condominio e gli straordinari aperti. Legge TCONDOMINI, TRATE, TRATE_IMPORTI, TMOVIMENTI e TSALDI_UNITAANAGR.",
+      "source": {
+        "args": {
+          "query": "WITH ES AS (SELECT C.ID, C.CONDGENID FROM TCONDOMINI C WHERE C.DATAAPERTURA <= CURRENT_DATE AND ((C.STRAORDINARIO = 1 AND C.DATACHIUSURA >= CURRENT_DATE) OR (C.STRAORDINARIO = 0 AND C.DATAAPERTURA = (SELECT MAX(C2.DATAAPERTURA) FROM TCONDOMINI C2 WHERE C2.CONDGENID = C.CONDGENID AND C2.STRAORDINARIO = 0 AND C2.DATAAPERTURA <= CURRENT_DATE)))), DOV AS (SELECT RI.CONDOMINIOID, RI.ANAGRID, SUM(RI.IMPORTO) AS DOVUTO FROM TRATE_IMPORTI RI JOIN TRATE R ON R.ID = RI.RATAID WHERE CAST(R.DATA AS DATE) <= CURRENT_DATE GROUP BY 1, 2), VER AS (SELECT M.CONDOMINIOID, M.ANAGRID, SUM(M.IMPORTO) AS VERSATO FROM TMOVIMENTI M WHERE M.TIPO = 3 GROUP BY 1, 2), SAL AS (SELECT S.CONDOMINIOID, S.ANAGRID, SUM(S.IMPORTO) AS SALDO FROM TSALDI_UNITAANAGR S GROUP BY 1, 2), P AS (SELECT ES.CONDGENID, D.ANAGRID, D.DOVUTO - COALESCE(V.VERSATO, 0) - MAXVALUE(COALESCE(SA.SALDO, 0), 0) AS SCOPERTO FROM ES JOIN DOV D ON D.CONDOMINIOID = ES.ID LEFT JOIN VER V ON V.CONDOMINIOID = ES.ID AND V.ANAGRID = D.ANAGRID LEFT JOIN SAL SA ON SA.CONDOMINIOID = ES.ID AND SA.ANAGRID = D.ANAGRID) SELECT CAST(SUM(CASE WHEN P.SCOPERTO > 0.005 THEN P.SCOPERTO ELSE 0 END) AS NUMERIC(15,2)) AS SCOPERTO, COUNT(DISTINCT CASE WHEN P.SCOPERTO > 0.005 THEN P.CONDGENID * 1000000 + P.ANAGRID END) AS MOROSI FROM P"
+        },
+        "connector": "allerto-brain",
+        "kind": "query",
+        "tool": "sql"
+      }
+    },
+    "morosita_condominio": {
+      "title": "Morosità per condominio",
+      "description": "Per ogni condominio: scoperto delle rate scadute, condòmini con rate scoperte, totale rate scadute e versato, negli esercizi in corso. Legge TCONDOMINI, TCONDOMINI_GENERALE, TRATE, TRATE_IMPORTI, TMOVIMENTI e TSALDI_UNITAANAGR.",
+      "source": {
+        "args": {
+          "query": "WITH ES AS (SELECT C.ID, C.CONDGENID FROM TCONDOMINI C WHERE C.DATAAPERTURA <= CURRENT_DATE AND ((C.STRAORDINARIO = 1 AND C.DATACHIUSURA >= CURRENT_DATE) OR (C.STRAORDINARIO = 0 AND C.DATAAPERTURA = (SELECT MAX(C2.DATAAPERTURA) FROM TCONDOMINI C2 WHERE C2.CONDGENID = C.CONDGENID AND C2.STRAORDINARIO = 0 AND C2.DATAAPERTURA <= CURRENT_DATE)))), DOV AS (SELECT RI.CONDOMINIOID, RI.ANAGRID, SUM(RI.IMPORTO) AS DOVUTO FROM TRATE_IMPORTI RI JOIN TRATE R ON R.ID = RI.RATAID WHERE CAST(R.DATA AS DATE) <= CURRENT_DATE GROUP BY 1, 2), VER AS (SELECT M.CONDOMINIOID, M.ANAGRID, SUM(M.IMPORTO) AS VERSATO FROM TMOVIMENTI M WHERE M.TIPO = 3 GROUP BY 1, 2), SAL AS (SELECT S.CONDOMINIOID, S.ANAGRID, SUM(S.IMPORTO) AS SALDO FROM TSALDI_UNITAANAGR S GROUP BY 1, 2), P AS (SELECT ES.CONDGENID, D.ANAGRID, D.DOVUTO, COALESCE(V.VERSATO, 0) AS VERSATO, D.DOVUTO - COALESCE(V.VERSATO, 0) - MAXVALUE(COALESCE(SA.SALDO, 0), 0) AS SCOPERTO FROM ES JOIN DOV D ON D.CONDOMINIOID = ES.ID LEFT JOIN VER V ON V.CONDOMINIOID = ES.ID AND V.ANAGRID = D.ANAGRID LEFT JOIN SAL SA ON SA.CONDOMINIOID = ES.ID AND SA.ANAGRID = D.ANAGRID) SELECT TRIM(G.INTESTAZIONE) AS CONDOMINIO, TRIM(G.CITTA) AS CITTA, CAST(SUM(CASE WHEN P.SCOPERTO > 0.005 THEN P.SCOPERTO ELSE 0 END) AS NUMERIC(15,2)) AS SCOPERTO, COUNT(DISTINCT CASE WHEN P.SCOPERTO > 0.005 THEN P.ANAGRID END) AS MOROSI, CAST(SUM(P.DOVUTO) AS NUMERIC(15,2)) AS DOVUTO_SCADUTO, CAST(SUM(P.VERSATO) AS NUMERIC(15,2)) AS VERSATO FROM P JOIN TCONDOMINI_GENERALE G ON G.ID = P.CONDGENID GROUP BY 1, 2 ORDER BY 3 DESC"
+        },
+        "connector": "allerto-brain",
+        "kind": "query",
+        "tool": "sql"
+      }
+    },
+    "morosi": {
+      "title": "Condòmini con rate scoperte",
+      "description": "Una riga per condòmino ed esercizio in corso con rate scadute non coperte: rate scadute, versato, credito dell'esercizio prima e scoperto. Legge TCONDOMINI, TCONDOMINI_GENERALE, TANAGRAFICA, TRATE, TRATE_IMPORTI, TMOVIMENTI e TSALDI_UNITAANAGR.",
+      "source": {
+        "args": {
+          "query": "WITH ES AS (SELECT C.ID, C.CONDGENID, C.DESCRIZIONE, C.STRAORDINARIO FROM TCONDOMINI C WHERE C.DATAAPERTURA <= CURRENT_DATE AND ((C.STRAORDINARIO = 1 AND C.DATACHIUSURA >= CURRENT_DATE) OR (C.STRAORDINARIO = 0 AND C.DATAAPERTURA = (SELECT MAX(C2.DATAAPERTURA) FROM TCONDOMINI C2 WHERE C2.CONDGENID = C.CONDGENID AND C2.STRAORDINARIO = 0 AND C2.DATAAPERTURA <= CURRENT_DATE)))), DOV AS (SELECT RI.CONDOMINIOID, RI.ANAGRID, SUM(RI.IMPORTO) AS DOVUTO FROM TRATE_IMPORTI RI JOIN TRATE R ON R.ID = RI.RATAID WHERE CAST(R.DATA AS DATE) <= CURRENT_DATE GROUP BY 1, 2), VER AS (SELECT M.CONDOMINIOID, M.ANAGRID, SUM(M.IMPORTO) AS VERSATO FROM TMOVIMENTI M WHERE M.TIPO = 3 GROUP BY 1, 2), SAL AS (SELECT S.CONDOMINIOID, S.ANAGRID, SUM(S.IMPORTO) AS SALDO FROM TSALDI_UNITAANAGR S GROUP BY 1, 2), P AS (SELECT ES.ID AS ES_ID, ES.CONDGENID, TRIM(ES.DESCRIZIONE) AS ESERCIZIO, ES.STRAORDINARIO, D.ANAGRID, D.DOVUTO, COALESCE(V.VERSATO, 0) AS VERSATO, MAXVALUE(COALESCE(SA.SALDO, 0), 0) AS CREDITO_PREC FROM ES JOIN DOV D ON D.CONDOMINIOID = ES.ID LEFT JOIN VER V ON V.CONDOMINIOID = ES.ID AND V.ANAGRID = D.ANAGRID LEFT JOIN SAL SA ON SA.CONDOMINIOID = ES.ID AND SA.ANAGRID = D.ANAGRID) SELECT P.ES_ID, P.ANAGRID, TRIM(G.INTESTAZIONE) AS CONDOMINIO, P.ESERCIZIO, CASE P.STRAORDINARIO WHEN 1 THEN 'Straordinario' ELSE 'Ordinario' END AS TIPO_ESERCIZIO, TRIM(A.DESCR) AS CONDOMINO, CAST(P.DOVUTO AS NUMERIC(15,2)) AS DOVUTO_SCADUTO, CAST(P.VERSATO AS NUMERIC(15,2)) AS VERSATO, CAST(P.CREDITO_PREC AS NUMERIC(15,2)) AS CREDITO_PREC, CAST(P.DOVUTO - P.VERSATO - P.CREDITO_PREC AS NUMERIC(15,2)) AS SCOPERTO FROM P LEFT JOIN TCONDOMINI_GENERALE G ON G.ID = P.CONDGENID LEFT JOIN TANAGRAFICA A ON A.ID = P.ANAGRID WHERE P.DOVUTO - P.VERSATO - P.CREDITO_PREC > 0.005 ORDER BY 10 DESC"
+        },
+        "connector": "allerto-brain",
+        "kind": "query",
+        "tool": "sql"
+      }
+    },
+    "assemblee": {
+      "title": "Assemblee",
+      "description": "Tutte le assemblee in archivio con date di convocazione, ora, luogo e stato: tenuta (verbale scritto), convocata (data futura) o senza verbale. Legge TASSEMBLEE e TCONDOMINI_GENERALE.",
+      "source": {
+        "args": {
+          "query": "SELECT A.ID, TRIM(G.INTESTAZIONE) AS CONDOMINIO, TRIM(A.DESCRIZIONE) AS TIPO, CAST(A.PR_CONV_DATA AS DATE) AS PRIMA_CONV, CAST(A.SE_CONV_DATA AS DATE) AS SECONDA_CONV, TRIM(A.SE_CONV_ORA) AS ORA, TRIM(A.SE_CONV_LUOGO) AS LUOGO, CASE WHEN A.INIZIATA_1_ON = 1 OR A.INIZIATA_2_ON = 1 THEN 'Tenuta' WHEN CAST(A.SE_CONV_DATA AS DATE) >= CURRENT_DATE THEN 'Convocata' ELSE 'Senza verbale' END AS STATO FROM TASSEMBLEE A LEFT JOIN TCONDOMINI_GENERALE G ON G.ID = A.CONDGENID ORDER BY A.SE_CONV_DATA DESC"
+        },
+        "connector": "allerto-brain",
+        "kind": "query",
+        "tool": "sql"
+      }
+    },
+    "assicurazioni": {
+      "title": "Scadenze premi assicurativi",
+      "description": "Scadenza del premio di ogni polizza condominiale e giorni che mancano. Legge TCONDGEN_ASSICURAZIONI e TCONDOMINI_GENERALE.",
+      "source": {
+        "args": {
+          "query": "SELECT TRIM(G.INTESTAZIONE) AS CONDOMINIO, TRIM(A.NUM_POLIZZA) AS POLIZZA, CAST(A.SCAD_PREMIO AS DATE) AS SCADENZA_PREMIO, CAST(A.SCAD_PREMIO AS DATE) - CURRENT_DATE AS GIORNI FROM TCONDGEN_ASSICURAZIONI A LEFT JOIN TCONDOMINI_GENERALE G ON G.ID = A.CONDGENID ORDER BY A.SCAD_PREMIO"
+        },
+        "connector": "allerto-brain",
+        "kind": "query",
+        "tool": "sql"
+      }
+    },
+    "per_condominio": {
+      "title": "Segnalazioni per condominio",
+      "description": "Segnalazioni aperte e chiuse per ogni condominio dell'archivio. Legge TCONDOMINI_GENERALE e TSEGNALAZ.",
+      "source": {
+        "args": {
+          "query": "SELECT TRIM(G.INTESTAZIONE) AS CONDOMINIO, TRIM(G.CITTA) AS CITTA, (SELECT COUNT(*) FROM TSEGNALAZ S WHERE S.CONDGENID = G.ID AND S.STATO <> 3) AS APERTE, (SELECT COUNT(*) FROM TSEGNALAZ S WHERE S.CONDGENID = G.ID AND S.STATO = 3) AS CHIUSE FROM TCONDOMINI_GENERALE G ORDER BY 3 DESC, 1"
+        },
+        "connector": "allerto-brain",
+        "kind": "query",
+        "tool": "sql"
+      }
+    },
+    "chiamate": {
+      "title": "Chiamate del centralino",
+      "description": "Le ultime 20 chiamate risposte da Allerto, gestite e da gestire. Legge le chiamate del centralino Allerto.",
+      "source": {
+        "args": {
+          "stato": "tutte"
+        },
+        "connector": "allerto-brain",
+        "kind": "query",
+        "tool": "ultimeChiamate"
+      }
+    }
+  }
+}

@@ -2,7 +2,7 @@
 name: regole-studio
 description: "Regole di lavoro dello studio di amministrazione condominiale. Usala per ogni attività sui condomini, i condòmini, i fornitori e i ticket dello studio: risposte a email e chiamate, ricerche in Danea, documenti su Drive, verbali, decisioni da registrare. Usala anche quando lo studio definisce una nuova regola, un processo o un'automazione da ricordare."
 metadata:
-  version: "0.2.0"
+  version: "0.4.0"
 ---
 
 # Regole dello studio
@@ -21,7 +21,7 @@ Se non conosci l'indirizzo del centro di comando, cercalo tra gli artifact dello
 ## Regole che valgono sempre
 
 1. Non inviare mai email: prepari solo bozze. Unica eccezione: il riepilogo del mattino all'amministratore, se in configurazione `riepilogo.invio` è `automatico`.
-2. Non scrivere mai in Danea: l'archivio è in sola lettura. Prepari il testo da incollare a mano.
+2. Non scrivere mai in Danea con le query: l'archivio è in sola lettura. L'unico modo di scrivere in Danea è aprire una pratica tramite Allerto (`creaAttivita` con `apriPratica`), e solo quando lo studio lo chiede o clicca il pulsante. Prima controlla che non esista già una segnalazione aperta sullo stesso tema. Per tutto il resto prepari il testo da incollare a mano.
 3. Non dare i dati di un condòmino a terzi senza delega.
 4. Non inventare importi, date, IBAN, nomi, millesimi o allegati. Se un dato manca, dillo e indica dove si trova.
 5. Non cancellare file su Drive. Non modificare né cancellare voci della memoria scritte da altri.
@@ -49,7 +49,21 @@ Indica sempre la fonte: "Danea – tabella e campo" oppure "Drive – cartella e
 
 ## Chat per area
 
-Le aree sono: Email, Assemblee, Fornitori e lavori, Contabilità e morosità, Archivio documenti, Scadenze. A fine risposta suggerisci in una riga di spostarti in un'altra chat quando la chat è troppo lunga, quando si passa al tema di un'altra area o quando nasce un argomento nuovo. Lo suggerisci una sola volta per tema e rispondi comunque. Alle domande veloci sul tema in corso rispondi senza suggerire spostamenti.
+Le aree sono: Email, Assemblee, Fornitori e lavori, Contabilità e morosità, Archivio documenti, Scadenze.
+
+- **Dove lavorare.** Quando si comincia un lavoro o cambia argomento, consiglia in una riga se continuare in questa chat o aprirne una nuova, e in quale area. Esempio: "Per i solleciti ai morosi meglio una nuova chat nell'area Contabilità e morosità".
+- **Chat troppo lunga.** Quando la chat diventa lunga, consiglia di aprirne una nuova. Proponi anche un breve riassunto da incollare all'inizio: decisioni prese, dati trovati, cosa resta da fare.
+- Lo consigli una sola volta per tema e rispondi comunque. Alle domande veloci sul tema in corso rispondi senza suggerire spostamenti.
+
+## Prossimo passo e modo di lavorare
+
+- A fine risposta indica sempre la migliore azione da fare adesso, in una riga e adatta al contesto. Esempi: aprire il ticket, controllare una bozza, richiamare un condòmino.
+- Aiuta lo studio a lavorare meglio con Claude. Quando vedi un'occasione, proponila in una riga:
+  - un'operazione ripetuta che può diventare una regola, una skill o un'attività programmata;
+  - un connettore che manca;
+  - un dato che conviene tenere nella memoria condivisa;
+  - un documento da sistemare su Drive.
+- Non insistere: se lo studio non coglie un suggerimento, non ripeterlo per lo stesso tema.
 
 ## Nuove regole
 

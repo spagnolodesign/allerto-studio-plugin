@@ -43,6 +43,9 @@
 
   .al-card { background: var(--al-panel); border: 1px solid var(--al-line); border-radius: 16px; padding: 22px 22px 18px; min-width: 0; scroll-margin-top: 76px; }
   .al-card-h { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .cc-open { margin-left: auto; font-size: .9rem; font-weight: 600; color: var(--al-accent); text-decoration: none; border: 1px solid var(--al-accent); border-radius: 6px; padding: 5px 12px; white-space: nowrap; transition: background .15s ease, color .15s ease; }
+  .cc-open:hover { background: var(--al-accent); color: #fff; }
+  .cc-open:focus-visible { outline: 2px solid var(--al-accent); outline-offset: 2px; }
   .al-n { font-family: var(--al-mono); font-size: .74rem; color: var(--al-muted); }
   .al-card h2 { font-size: 1.3rem; font-weight: 700; letter-spacing: -.015em; line-height: 1.2; }
   .al-note { font-family: var(--al-serif); font-size: .98rem; line-height: 1.45; color: var(--al-ink-2); margin: 6px 0 16px; max-width: 68ch; }
@@ -325,7 +328,7 @@
       </section>
 
       <section class="al-card" id="chiamate">
-        <div class="al-card-h"><span class="al-n">08</span><h2>Chiamate del centralino</h2></div>
+        <div class="al-card-h"><span class="al-n">08</span><h2>Chiamate del centralino</h2><a class="cc-open" href="{{DASHBOARD_CHIAMATE}}" target="_blank" rel="noopener">Apri la dashboard delle chiamate →</a></div>
         <p class="al-note">Le ultime 20 chiamate risposte da Allerto, dalla più recente.</p>
         <div class="al-tbl al-tall">
           <table data-source="chiamate" data-row-key="id">

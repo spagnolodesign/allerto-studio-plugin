@@ -2,7 +2,7 @@
 name: configura-studio
 description: "This skill should be used when a condominium-administration studio installs Allerto Studio for the first time, or asks to \"configura lo studio\", \"configura Allerto\", \"imposta il riepilogo del mattino\", \"cambia l'orario del riepilogo\", \"cambia la firma dello studio\", \"attiva le automazioni di Allerto\". It collects the studio's settings, creates the command center, saves the configuration and schedules the morning summary.\n"
 metadata:
-  version: "0.3.0"
+  version: "0.4.0"
 ---
 
 # Configura lo studio
@@ -78,6 +78,14 @@ Se `bozzeEmail.attivo` è vero e la posta è collegata:
   - `initiation`: `human_request`.
 - Riferisci in una frase se le esecuzioni partono da sole o chiedono approvazione.
 
+### 5ter. Dashboard delle chiamate
+
+Segui la skill `dashboard-chiamate` (parte A) per creare la pagina e fare il primo giro. Poi programma il giro orario come per le bozze email:
+- `name`: "Allerto · chiamate";
+- `cron_expression`: ogni ora nella fascia di `chiamate.orario`, per esempio `CRON_TZ=Europe/Rome 0 8-19 * * 1-5`;
+- `prompt`: "Usa la skill dashboard-chiamate del plugin Allerto Studio, parte B. Centro di comando: <indirizzo>. Leggi la configurazione da lì (collection allerto, documento config), analizza le chiamate nuove e aggiorna la dashboard delle chiamate.";
+- `notifications`: `{push: true}`; `initiation`: `human_request`.
+
 ### 6. Istruzioni del Progetto
 
 Le regole di lavoro arrivano con la skill `regole-studio` e valgono in ogni chat. Se lo studio lavora in un Progetto di claude.ai:
@@ -98,6 +106,7 @@ Una riga per ciascuna cosa:
 - la configurazione salvata, con i campi principali;
 - il riepilogo programmato, con orario, giorni e se parte da solo;
 - il controllo orario delle email, con fascia oraria;
+- la dashboard delle chiamate e il giro orario;
 - le istruzioni del Progetto da incollare, se serve;
 - la bozza di prova.
 

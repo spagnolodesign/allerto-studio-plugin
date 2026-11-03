@@ -2,7 +2,7 @@
 name: centro-di-comando
 description: "This skill should be used when the studio asks to \"crea il centro di comando\", \"installa il centro di comando\", \"aggiorna il centro di comando\", \"rifai la dashboard dello studio\", \"porta il centro di comando all'ultima versione\", or when another Allerto skill needs the studio's command-center dashboard to exist. It creates or updates the Allerto-branded live dashboard over Danea and the Allerto switchboard from the files shipped with this plugin.\n"
 metadata:
-  version: "0.1.0"
+  version: "0.4.0"
 ---
 
 # Centro di comando
@@ -48,7 +48,7 @@ Annota le `version` di ciascuno.
 
 ### 3. Controlla modifiche fatte a mano
 
-Confronta `files/index.html` dello store con il campo `paginaSha256` di `allerto/config`, calcolando lo sha256 del testo con Bash. Se differiscono, qualcuno ha modificato la pagina dopo l'ultimo aggiornamento. In quel caso:
+Confronta lo sha256 di `files/index.html` dello store con il campo `paginaSha256` di `allerto/config`, calcolando lo sha256 del testo con Bash. Se differiscono, qualcuno ha modificato la pagina dopo l'ultimo aggiornamento. In quel caso:
 - dillo all'utente;
 - chiedi se sovrascrivere o tenere la sua versione;
 - non sovrascrivere senza un sì.
@@ -56,7 +56,7 @@ Confronta `files/index.html` dello store con il campo `paginaSha256` di `allerto
 ### 4. Prepara i documenti
 
 Usa Bash, con Python e il flag `-I`, per scrivere in una cartella di lavoro:
-- `index.json` = `{"text": <contenuto di assets/index.html>}`;
+- `index.json` = `{"text": <contenuto di assets/index.html>}`, dopo aver sostituito `{{DASHBOARD_CHIAMATE}}` con `chiamate.dashboard` della configurazione. Se la dashboard delle chiamate non esiste ancora, togli l'intero link `<a class="cc-open" …>…</a>` dalla pagina;
 - `fonts.json` = `{"text": <contenuto di assets/fonts.css>}`.
 
 Leggi `assets/datasets.json` per le sorgenti.
@@ -83,7 +83,7 @@ Non cancellare sorgenti che non sono in `datasets.json`: potrebbero essere aggiu
 Aggiorna `allerto/config`:
 - `centroDiComando`: l'indirizzo;
 - `versionePlugin`: la `versione` di `datasets.json`;
-- `paginaSha256`: lo sha256 di `assets/index.html`;
+- `paginaSha256`: lo sha256 della pagina scritta, cioè con l'indirizzo delle chiamate già sostituito;
 - `aggiornato`: l'ora attuale.
 
 Se `allerto/config` non esiste, crealo con i soli campi noti e suggerisci la skill `configura-studio`.

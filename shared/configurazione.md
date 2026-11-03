@@ -27,6 +27,13 @@ Si legge e si scrive con lo strumento `ArtifactData` (`get` / `set` / `update` c
     "giorni": "lun-ven",
     "massimoPerGiro": 15
   },
+  "chiamate": {
+    "dashboard": "https://claude.ai/artifact/…",
+    "attivo": true,
+    "orario": "08-19",
+    "giorni": "lun-ven",
+    "apriPraticaDanea": true
+  },
   "soglie": {
     "giorniRitardoIntervento": 0,
     "giorniPremioInScadenza": 60
@@ -42,6 +49,7 @@ Si legge e si scrive con lo strumento `ArtifactData` (`get` / `set` / `update` c
 - `riepilogo.invio`: `automatico` (manda l'email) oppure `bozza` (la lascia in bozza nella posta). Il riepilogo è interno allo studio, quindi `automatico` è il default.
 - `modalitaVerbali`: come lo studio archivia i verbali. `A` = solo moduli Danea, `B` = solo PDF su Drive, `C` = entrambi. La usa la skill `regole-studio`.
 - `bozzeEmail`: il controllo orario della posta della skill `bozze-email`. `orario` = fascia oraria dei giri. L'avviso arriva sempre come notifica dell'attività programmata, mai per email.
+- `chiamate`: la dashboard delle chiamate della skill `dashboard-chiamate` e la fascia oraria del giro di analisi. `apriPraticaDanea`: se nella dashboard la casella "Apri anche la pratica in Danea" parte spuntata (default `true`). La pratica la apre Allerto, se Danea è collegato in scrittura.
 - `soglie.giorniRitardoIntervento`: da quanti giorni di ritardo un intervento finisce nel riepilogo (0 = appena passa la data prevista).
 - `versionePlugin`: la versione del plugin che ha scritto per ultimo il centro di comando. La skill `centro-di-comando` la confronta con la propria per sapere se c'è un aggiornamento.
 

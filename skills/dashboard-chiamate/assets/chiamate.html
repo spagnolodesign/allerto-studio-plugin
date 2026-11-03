@@ -1,0 +1,447 @@
+<title>Chiamate · allerto.</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&display=swap">
+<style>
+/* Layout: registro delle chiamate a colonna unica, come un brogliaccio del centralino; azioni sempre a portata su ogni riga. */
+:root {
+  --bg: #F1EEE6; --panel: #FAF9F5; --ink: #141413; --ink-2: #3D3D3A; --muted: #6E6962;
+  --line: #DCD8CD; --line-soft: #E8E4DA; --accent: #EE4A1C; --accent-ink: #FFFFFF; --accent-hover: #C93A12;
+  --bad: #B3261E; --bad-bg: #FBE4E1; --warn: #8A5A00; --warn-bg: #FBF0D6; --ok: #2E6B3F; --ok-bg: #E2F0E4;
+  --sans: "Hanken Grotesk", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #1A1917; --panel: #23211E; --ink: #F1EEE6; --ink-2: #D6D2C8; --muted: #A39E94;
+  --line: #3A3733; --line-soft: #2E2C28; --accent: #F2643A; --accent-ink: #1A1917; --accent-hover: #FF7F58;
+  --bad: #FF8A80; --bad-bg: #3A1F1C; --warn: #F2C46B; --warn-bg: #3A3020; --ok: #8FD19E; --ok-bg: #1F3324; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #1A1917; --panel: #23211E; --ink: #F1EEE6; --ink-2: #D6D2C8; --muted: #A39E94;
+  --line: #3A3733; --line-soft: #2E2C28; --accent: #F2643A; --accent-ink: #1A1917; --accent-hover: #FF7F58;
+  --bad: #FF8A80; --bad-bg: #3A1F1C; --warn: #F2C46B; --warn-bg: #3A3020; --ok: #8FD19E; --ok-bg: #1F3324; color-scheme: dark }
+
+body { background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 15px; line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+* { box-sizing: border-box; }
+h1, h2, p { margin: 0; }
+.wrap { max-width: 1080px; margin: 0 auto; padding-block: 20px 56px; display: grid; gap: 20px; }
+
+.top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 20px; border-bottom: 1px solid var(--line); padding-bottom: 14px; }
+.logo { font-weight: 700; letter-spacing: -.035em; font-size: 1.5rem; line-height: 1; }
+.logo b { color: var(--accent); }
+.top h1 { font-family: var(--serif); font-weight: 600; font-size: 1.5rem; letter-spacing: -.01em; }
+.top .meta { margin-left: auto; color: var(--muted); font-size: .85rem; font-variant-numeric: tabular-nums; }
+
+.summary { display: flex; flex-wrap: wrap; gap: 10px 28px; align-items: end; }
+.stat { display: grid; gap: 2px; }
+.stat .n { font-family: var(--serif); font-size: 2.2rem; line-height: 1; font-variant-numeric: tabular-nums; }
+.stat .l { font-size: .78rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+.stat.hot .n { color: var(--accent); }
+
+.bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.chip { font: inherit; font-size: .88rem; border: 1px solid var(--line); background: var(--panel); color: var(--ink-2);
+  padding: 5px 12px; border-radius: 999px; cursor: pointer; }
+.chip[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.search { margin-left: auto; font: inherit; font-size: .9rem; padding: 6px 10px; border: 1px solid var(--line); border-radius: 8px;
+  background: var(--panel); color: var(--ink); min-width: 0; width: 220px; max-width: 100%; }
+
+.notice { padding: 12px 14px; border-radius: 8px; background: var(--warn-bg); color: var(--warn); font-size: .9rem; }
+.notice.bad { background: var(--bad-bg); color: var(--bad); }
+
+.list { display: grid; border-top: 1px solid var(--line); }
+.call { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 4px 18px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+.call.urgent { box-shadow: inset 3px 0 0 var(--bad); padding-left: 12px; }
+.when { font-family: var(--mono); font-size: .8rem; color: var(--muted); padding-top: 3px; font-variant-numeric: tabular-nums; }
+.body { display: grid; gap: 6px; min-width: 0; }
+.who { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; }
+.who strong { font-size: 1.05rem; font-weight: 600; }
+.who .cond { color: var(--ink-2); }
+.who .num { font-family: var(--mono); font-size: .85rem; color: var(--muted); user-select: all; }
+.what { color: var(--ink-2); max-width: 70ch; }
+.what.empty { color: var(--muted); font-style: italic; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tag { font-size: .75rem; padding: 2px 8px; border-radius: 4px; background: var(--line-soft); color: var(--ink-2); white-space: nowrap; }
+.tag.bad { background: var(--bad-bg); color: var(--bad); font-weight: 600; }
+.tag.warn { background: var(--warn-bg); color: var(--warn); }
+.tag.ok { background: var(--ok-bg); color: var(--ok); }
+.actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+.btn { font: inherit; font-size: .85rem; font-weight: 500; padding: 6px 12px; border-radius: 6px; border: 1px solid var(--line);
+  background: var(--panel); color: var(--ink); cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+.btn:hover { border-color: var(--ink-2); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn.primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+.btn[aria-expanded="true"] { border-color: var(--ink); background: var(--line-soft); }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+.btn:focus-visible, .chip:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.panel { margin-top: 8px; padding: 14px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); display: grid; gap: 10px; max-width: 720px; }
+.panel h2 { font-size: .8rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; }
+.field { display: grid; gap: 4px; }
+.field label { font-size: .8rem; color: var(--muted); }
+.field input, .field textarea, .field select { font: inherit; font-size: .92rem; padding: 7px 9px; border: 1px solid var(--line); border-radius: 6px;
+  background: var(--bg); color: var(--ink); width: 100%; min-width: 0; }
+.field textarea { min-height: 150px; resize: vertical; line-height: 1.45; }
+.row2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; }
+.hint { font-size: .82rem; color: var(--muted); }
+.check { display: flex; align-items: center; gap: 8px; font-size: .9rem; cursor: pointer; }
+.check input { width: 16px; height: 16px; accent-color: var(--accent); }
+.result { font-size: .88rem; padding: 8px 10px; border-radius: 6px; background: var(--ok-bg); color: var(--ok); }
+.result.bad { background: var(--bad-bg); color: var(--bad); }
+.result a { color: inherit; font-weight: 600; }
+.ref { font-family: var(--mono); font-size: .85rem; white-space: pre-wrap; background: var(--bg); border: 1px solid var(--line-soft); padding: 10px; border-radius: 6px; user-select: all; }
+.transcript { display: grid; gap: 4px; font-size: .88rem; max-height: 320px; overflow-y: auto; }
+.transcript p { color: var(--ink-2); }
+.transcript p b { color: var(--ink); font-weight: 600; }
+.empty-state { padding: 32px 0; color: var(--muted); text-align: left; }
+
+@media (max-width: 560px) {
+  .call { grid-template-columns: minmax(0, 1fr); }
+  .search { margin-left: 0; width: 100%; }
+}
+@media (prefers-reduced-motion: no-preference) { .panel { animation: in .18s ease-out; } @keyframes in { from { opacity: .4; transform: translateY(-3px); } } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <span class="logo">allerto<b>.</b></span>
+    <h1>Chiamate</h1>
+    <span class="meta" id="meta">In attesa dei dati del centralino…</span>
+  </header>
+
+  <section class="summary" id="summary" aria-label="Riepilogo">
+    <div class="stat hot"><span class="n" id="s-da">—</span><span class="l">Da gestire</span></div>
+    <div class="stat"><span class="n" id="s-urg">—</span><span class="l">Urgenti</span></div>
+    <div class="stat"><span class="n" id="s-oggi">—</span><span class="l">Oggi</span></div>
+  </section>
+
+  <div class="bar" role="toolbar" aria-label="Filtri">
+    <button class="chip" id="f-da_gestire" data-f="da_gestire" aria-pressed="true">Da gestire</button>
+    <button class="chip" id="f-urgenti" data-f="urgenti" aria-pressed="false">Urgenti</button>
+    <button class="chip" id="f-oggi" data-f="oggi" aria-pressed="false">Oggi</button>
+    <button class="chip" id="f-tutte" data-f="tutte" aria-pressed="false">Tutte</button>
+    <input class="search" id="q" type="search" placeholder="Cerca nome, condominio, numero" aria-label="Cerca">
+  </div>
+
+  <div id="notice" hidden></div>
+  <div class="list" id="list">
+    <p class="empty-state">Qui compaiono le chiamate del centralino Allerto, con le azioni per richiamare, rispondere via email o aprire un'attività. Al primo accesso il browser chiede di collegare Allerto.</p>
+  </div>
+</div>
+
+<script>
+/* Impostazioni dello studio: le scrive la skill dashboard-chiamate all'installazione. */
+const CFG = {
+  allerto: "{{SERVER_ALLERTO}}",
+  gmail: "{{SERVER_GMAIL}}",
+  firma: "{{FIRMA}}",
+  apriPratica: {{APRI_PRATICA}}
+};
+
+const S = { forcePratica: {}, calls: null, enr: {}, giro: null, filter: "da_gestire", q: "", open: null, panels: {}, mcp: null, db: null, err: null, at: null };
+
+function h(tag, attrs, ...kids) {
+  const el = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs || {})) {
+    if (v == null || v === false) continue;
+    if (k === "class") el.className = v;
+    else if (k.startsWith("on")) el.addEventListener(k.slice(2), v);
+    else el.setAttribute(k, v === true ? "" : v);
+  }
+  for (const c of kids.flat()) if (c != null && c !== false) el.append(c instanceof Node ? c : String(c));
+  return el;
+}
+
+const MESI = { gen:0, feb:1, mar:2, apr:3, mag:4, giu:5, lug:6, ago:7, set:8, ott:9, nov:10, dic:11 };
+function parseQuando(s) {
+  const m = /(\d{1,2})\s+([a-z]{3})\w*,?\s+(\d{1,2}):(\d{2})/i.exec(s || "");
+  if (!m) return null;
+  const now = new Date(); let y = now.getFullYear();
+  const d = new Date(y, MESI[m[2].toLowerCase()] ?? 0, +m[1], +m[3], +m[4]);
+  if (d - now > 7 * 864e5) d.setFullYear(y - 1);
+  return d;
+}
+const isToday = (d) => d && d.toDateString() === new Date().toDateString();
+const phoneOf = (c, e) => (e && e.numero) || (/^\+?\d[\d\s]{5,}$/.test(c.chi || "") ? c.chi.replace(/\s/g, "") : null);
+const nameOf = (c, e) => (e && e.chiDanea) || c.chi || "Chiamante sconosciuto";
+const fmtTime = (ms) => new Date(ms).toLocaleString("it-IT", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" });
+
+function errText(e, server) {
+  switch (e && e.code) {
+    case "needs_reauth": return `Il collegamento a ${server} è scaduto. Ricollegalo in claude.ai, Impostazioni → Connettori.`;
+    case "server_not_connected": case "selection_required": return `${server} non è collegato per il tuo account. Aggiungilo in claude.ai, Impostazioni → Connettori.`;
+    case "not_in_manifest": case "approval_required": return `Questa pagina non ha ancora il permesso di usare ${server}. Riapri la pagina e consenti l'accesso quando richiesto.`;
+    case "blocked_by_policy": return `L'organizzazione non consente di usare ${server} da questa pagina.`;
+    case "server_unavailable": return `${server} non risponde in questo momento. Riprova tra qualche minuto.`;
+    case "tool_error": return `${server} ha rifiutato l'operazione: ${e.message || "motivo non indicato"}.`;
+    case "not_granted": case "capability_disabled": case "capability_removed": return "Questa vista non può collegarsi ai connettori. Apri la pagina in claude.ai.";
+    default: return `Errore da ${server}: ${(e && e.message) || "sconosciuto"}.`;
+  }
+}
+
+function copy(text, btn) {
+  const done = () => { const t = btn.textContent; btn.textContent = "Copiato"; setTimeout(() => (btn.textContent = t), 1500); };
+  try {
+    navigator.clipboard.writeText(text).then(done, () => selectFallback(btn));
+  } catch { selectFallback(btn); }
+}
+function selectFallback(btn) {
+  const pre = btn.closest(".panel, .call").querySelector(".ref, .num");
+  if (!pre) return;
+  const r = document.createRange(); r.selectNodeContents(pre);
+  const s = getSelection(); s.removeAllRanges(); s.addRange(r);
+  btn.textContent = "Testo selezionato: copia con Ctrl+C";
+}
+
+async function saveAzione(id, key, val) {
+  if (!S.db) return;
+  try {
+    const ref = S.db.collection("chiamate").doc(id);
+    const snap = await ref.get();
+    const azioni = Object.assign({}, snap.exists ? (snap.data().azioni || {}) : {}, { [key]: Object.assign({ at: new Date().toISOString() }, val) });
+    if (snap.exists) await ref.update({ azioni }); else await ref.set({ chiamataId: id, azioni });
+  } catch { /* la registrazione è solo un promemoria per il resto dello studio */ }
+}
+
+/* ---------- Pannelli ---------- */
+function panelEmail(c, e) {
+  const b = (e && e.bozzaEmail) || {};
+  const to = h("input", { id: `em-to-${c.id}`, type: "email", value: (e && e.email) || "", placeholder: "indirizzo del destinatario" });
+  const subj = h("input", { id: `em-sub-${c.id}`, type: "text", value: b.oggetto || `Sua chiamata del ${c.quando}` });
+  const body = h("textarea", { id: `em-body-${c.id}` });
+  body.value = b.testo || `Gentile ${nameOf(c, e)},\n\nla ringraziamo per la sua chiamata.\n\n[DA COMPLETARE: risposta]\n\nCordiali saluti\n${CFG.firma}`;
+  const out = h("div", { hidden: true });
+  const go = h("button", { class: "btn primary", type: "button", onclick: async () => {
+    if (!to.value.trim()) { out.className = "result bad"; out.textContent = "Inserisci l'indirizzo del destinatario."; out.hidden = false; return; }
+    go.disabled = true; go.textContent = "Creo la bozza…";
+    try {
+      const r = await S.mcp.callTool(CFG.gmail, "create_draft", { to: [to.value.trim()], subject: subj.value, body: body.value }, { cache: false });
+      const p = r.payload || {};
+      out.className = "result"; out.replaceChildren("Bozza creata in Gmail. ", p.viewUrl ? h("a", { href: p.viewUrl, target: "_blank", rel: "noopener" }, "Apri la bozza") : "La trovi tra le bozze.");
+      saveAzione(c.id, "bozza", { viewUrl: p.viewUrl || null });
+      go.textContent = "Bozza creata";
+    } catch (err) {
+      out.className = "result bad"; out.textContent = errText(err, CFG.gmail);
+      go.disabled = false; go.textContent = "Crea bozza in Gmail";
+    }
+    out.hidden = false;
+  } }, "Crea bozza in Gmail");
+  return h("div", { class: "panel" },
+    h("h2", {}, "Risposta via email"),
+    !(e && e.email) ? h("p", { class: "hint" }, "Email del chiamante non trovata in Danea: inseriscila a mano.") : null,
+    h("div", { class: "field" }, h("label", { for: to.id }, "A"), to),
+    h("div", { class: "field" }, h("label", { for: subj.id }, "Oggetto"), subj),
+    h("div", { class: "field" }, h("label", { for: body.id }, "Testo"), body),
+    h("p", { class: "hint" }, "La pagina crea solo una bozza: la rileggi e la invii tu da Gmail."),
+    h("div", { class: "actions" }, go), out);
+}
+
+function panelTicket(c, e) {
+  const t = (e && e.ticket) || {};
+  const tit = h("input", { id: `tk-tit-${c.id}`, type: "text", maxlength: "200", value: t.titolo || "" , placeholder: "Es. Perdita nel garage" });
+  const pri = h("select", { id: `tk-pri-${c.id}` }, h("option", { value: "normale" }, "Normale"), h("option", { value: "urgente" }, "Urgente"));
+  pri.value = t.priorita === "urgente" || c.urgente ? "urgente" : "normale";
+  const desc = h("textarea", { id: `tk-desc-${c.id}` });
+  desc.value = t.descrizione || (e && e.riassunto) || c.cosa || "";
+  const nome = h("input", { id: `tk-nome-${c.id}`, type: "text", value: nameOf(c, e) });
+  const tel = h("input", { id: `tk-tel-${c.id}`, type: "tel", value: phoneOf(c, e) || "" });
+  const prat = h("input", { id: `tk-pr-${c.id}`, type: "checkbox" });
+  prat.checked = S.forcePratica[c.id] || CFG.apriPratica;
+  const condLabel = (e && e.condominio) ? `${e.condominio} (Danea n. ${e.condominioId})` : (c.condominio ? `${c.condominio} (non riconosciuto in Danea)` : "Non indicato");
+  const out = h("div", { hidden: true });
+  const already = [];
+  if (e && e.segnalazioneAperta) already.push(`segnalazione n. ${e.segnalazioneAperta.n} «${e.segnalazioneAperta.titolo}»`);
+  if (e && e.attivitaAperta) already.push(`attività «${e.attivitaAperta.titolo}»`);
+  if (c.suGestionale) already.push("pratica già sul gestionale per questa chiamata");
+  const go = h("button", { class: "btn primary", type: "button", onclick: async () => {
+    if (!tit.value.trim()) { out.className = "result bad"; out.textContent = "Scrivi un titolo breve per l'attività."; out.hidden = false; return; }
+    go.disabled = true; go.textContent = "Creo l'attività…";
+    const input = { titolo: tit.value.trim(), priorita: pri.value, descrizione: desc.value.trim() || undefined,
+      contattoNome: nome.value.trim() || undefined, contattoTelefono: tel.value.trim() || undefined, chiamataId: c.id, apriPratica: prat.checked };
+    if (e && e.condominioId) input.condominioDanea = Number(e.condominioId); else if (c.condominio) input.condominio = c.condominio;
+    try {
+      const r = await S.mcp.callTool(CFG.allerto, "creaAttivita", JSON.parse(JSON.stringify(input)), { cache: false });
+      const p = r.payload; const link = p && typeof p === "object" ? (p.link || p.url || p.linkAttivita) : null;
+      const nPrat = p && typeof p === "object" ? (p.pratica || p.numeroPratica || p.praticaDanea) : null;
+      out.className = "result";
+      out.replaceChildren("Attività creata in Allerto. ", nPrat ? `Pratica aperta in Danea: n. ${nPrat}. ` : (input.apriPratica ? "Allerto non ha restituito un numero di pratica: controlla in Danea. " : ""), link ? h("a", { href: link, target: "_blank", rel: "noopener" }, "Apri l'attività") : (typeof p === "string" ? p : ""));
+      go.textContent = "Attività creata";
+      saveAzione(c.id, "ticket", { titolo: input.titolo, link: link || null, pratica: nPrat || null });
+      S.mcp.invalidate(CFG.allerto, "ultimeChiamate").catch(() => {});
+    } catch (err) {
+      out.className = "result bad";
+      out.textContent = err && (err.code === "server_unavailable" || err.code === "upstream_error")
+        ? `${errText(err, CFG.allerto)} L'attività potrebbe essere stata creata comunque: controlla in Allerto prima di riprovare.`
+        : errText(err, CFG.allerto);
+      go.disabled = false; go.textContent = "Crea attività in Allerto";
+    }
+    out.hidden = false;
+  } }, "Crea attività in Allerto");
+  return h("div", { class: "panel" },
+    h("h2", {}, S.forcePratica[c.id] ? "Apri la pratica in Danea" : "Assegna ticket in Allerto"),
+    already.length ? h("p", { class: "notice" }, `Attenzione, esiste già: ${already.join("; ")}. Controlla di non creare un doppione.`) : null,
+    h("p", { class: "hint" }, "Condominio: ", h("strong", {}, condLabel)),
+    h("div", { class: "field" }, h("label", { for: tit.id }, "Titolo"), tit),
+    h("div", { class: "row2" },
+      h("div", { class: "field" }, h("label", { for: pri.id }, "Priorità"), pri),
+      h("div", { class: "field" }, h("label", { for: nome.id }, "Chi ha segnalato"), nome),
+      h("div", { class: "field" }, h("label", { for: tel.id }, "Telefono"), tel)),
+    h("div", { class: "field" }, h("label", { for: desc.id }, "Descrizione"), desc),
+    h("label", { class: "check", for: prat.id }, prat, " Apri anche la pratica in Danea"),
+    h("p", { class: "hint" }, "La pratica la apre Allerto in Danea, se Danea è collegato in scrittura. Il fornitore si affida dall'app Allerto."),
+    h("div", { class: "actions" }, go), out);
+}
+
+function panelDanea(c, e) {
+  const az = (e && e.azioni && e.azioni.ticket) || null;
+  const nPrat = (az && az.pratica) || null;
+  const lines = [];
+  if (e && e.condominio) lines.push(`Condominio: ${e.condominioCod ? e.condominioCod + " · " : ""}${e.condominio} (ID ${e.condominioId})`);
+  else lines.push(`Condominio: ${c.condominio || "non indicato"} (non riconosciuto in Danea)`);
+  if (e && e.anagId) lines.push(`Anagrafica: ${e.chiDanea || c.chi} (ID ${e.anagId}${e.ruolo ? ", " + e.ruolo : ""})`);
+  if (e && e.segnalazioneAperta) lines.push(`Segnalazione aperta: n. ${e.segnalazioneAperta.n} – ${e.segnalazioneAperta.titolo}`);
+  if (nPrat) lines.push(`Pratica aperta da Allerto: n. ${nPrat}`);
+  lines.push(`Chiamata del ${c.quando}${phoneOf(c, e) ? " · " + phoneOf(c, e) : ""}`);
+  const text = lines.join("\n");
+  const copyBtn = h("button", { class: "btn", type: "button", onclick: (ev) => copy(text, ev.currentTarget) }, "Copia riferimento");
+  const exists = c.suGestionale || nPrat || (e && e.segnalazioneAperta);
+  const openBtn = h("button", { class: exists ? "btn" : "btn primary", type: "button", onclick: () => {
+    S.forcePratica[c.id] = true; delete S.panels[c.id + ":ticket"]; S.open = { id: c.id, kind: "ticket" }; render();
+  } }, "Apri la pratica in Danea");
+  return h("div", { class: "panel" },
+    h("h2", {}, "Danea"),
+    exists
+      ? h("p", { class: "notice" }, c.suGestionale || nPrat ? "Per questa chiamata esiste già una pratica sul gestionale." : "Sullo stesso tema c'è già una segnalazione aperta in Danea.", " Controlla prima di aprirne un'altra.")
+      : h("p", { class: "hint" }, "Allerto può aprire la pratica in Danea insieme all'attività. Il programma Danea non si apre da un link: per cercarla sul computer dello studio usa il riferimento."),
+    h("div", { class: "ref" }, text),
+    h("div", { class: "actions" }, openBtn, copyBtn));
+}
+
+function panelDettaglio(c) {
+  const box = h("div", { class: "panel" }, h("h2", {}, "Dettaglio della chiamata"), h("p", { class: "hint" }, "Carico il trascritto…"));
+  S.mcp.callTool(CFG.allerto, "dettaglioChiamata", { id: c.id }, { cache: { staleTime: 300000, gcTime: 900000 } }).then((r) => {
+    const d = r.payload || {};
+    const kids = [h("h2", {}, "Dettaglio della chiamata")];
+    if (d.riassunto) kids.push(h("p", {}, d.riassunto));
+    const facts = [d.durataSecondi ? `Durata ${Math.round(d.durataSecondi)} s` : null, d.numero ? `Numero ${d.numero}` : null,
+      d.daRichiamareAl ? `Da richiamare al ${d.daRichiamareAl}` : null, d.praticaSulGestionale ? `Pratica ${d.praticaSulGestionale}` : null].filter(Boolean);
+    if (facts.length) kids.push(h("p", { class: "hint" }, facts.join(" · ")));
+    if (Array.isArray(d.trascritto) && d.trascritto.length) kids.push(h("div", { class: "transcript" }, d.trascritto.map((l) => {
+      const i = String(l).indexOf(":"); return i > 0 ? h("p", {}, h("b", {}, String(l).slice(0, i + 1)), String(l).slice(i + 1)) : h("p", {}, String(l));
+    })));
+    box.replaceChildren(...kids);
+  }, (err) => box.replaceChildren(h("h2", {}, "Dettaglio della chiamata"), h("p", { class: "result bad" }, errText(err, CFG.allerto))));
+  return box;
+}
+
+const PANELS = { email: panelEmail, ticket: panelTicket, danea: panelDanea, dettaglio: panelDettaglio };
+function toggle(id, kind) {
+  if (kind === "ticket" && S.forcePratica[id]) { delete S.forcePratica[id]; delete S.panels[id + ":ticket"]; }
+  S.open = S.open && S.open.id === id && S.open.kind === kind ? null : { id, kind };
+  render();
+}
+
+/* ---------- Lista ---------- */
+function visible() {
+  const q = S.q.trim().toLowerCase();
+  return (S.calls || []).filter((c) => {
+    const e = S.enr[c.id];
+    if (S.filter === "da_gestire" && c.gestita) return false;
+    if (S.filter === "urgenti" && !(c.urgente || (e && e.urgente))) return false;
+    if (S.filter === "oggi" && !isToday(parseQuando(c.quando))) return false;
+    if (!q) return true;
+    return [c.chi, c.condominio, c.cosa, e && e.condominio, e && e.riassunto, phoneOf(c, e)].some((v) => v && String(v).toLowerCase().includes(q));
+  });
+}
+
+function row(c) {
+  const e = S.enr[c.id];
+  const urg = c.urgente || (e && e.urgente);
+  const tel = phoneOf(c, e);
+  const cosa = (e && e.riassunto) || c.cosa;
+  const tags = [];
+  if (urg) tags.push(h("span", { class: "tag bad" }, "Urgente"));
+  tags.push(h("span", { class: c.gestita ? "tag ok" : "tag warn" }, c.gestita ? "Gestita" : "Da gestire"));
+  if (e && e.ruolo) tags.push(h("span", { class: "tag" }, e.ruolo));
+  if (c.scontento) tags.push(h("span", { class: "tag warn" }, c.scontento));
+  if (c.suGestionale) tags.push(h("span", { class: "tag" }, "Sul gestionale"));
+  if (e && e.segnalazioneAperta) tags.push(h("span", { class: "tag" }, `Segnalazione n. ${e.segnalazioneAperta.n}`));
+  if (e && e.azioneSuggerita) tags.push(h("span", { class: "tag" }, `Suggerito: ${e.azioneSuggerita}`));
+  if (e && e.azioni && e.azioni.ticket) tags.push(h("span", { class: "tag ok" }, "Attività creata"));
+  if (e && e.azioni && e.azioni.bozza) tags.push(h("span", { class: "tag ok" }, "Bozza email creata"));
+
+  const btn = (kind, label) => h("button", { class: "btn", type: "button", "aria-expanded": S.open && S.open.id === c.id && S.open.kind === kind ? "true" : "false",
+    onclick: () => toggle(c.id, kind) }, label);
+  const actions = h("div", { class: "actions" },
+    tel ? h("a", { class: "btn primary", href: "tel:" + tel.replace(/[^\d+]/g, "") }, "Chiama") : h("button", { class: "btn", type: "button", disabled: true, title: "Numero non disponibile" }, "Chiama"),
+    btn("email", "Rispondi via email"), btn("ticket", "Assegna ticket"), btn("danea", "Apri in Danea"), btn("dettaglio", "Dettaglio"));
+
+  let panel = null;
+  if (S.open && S.open.id === c.id) {
+    const key = c.id + ":" + S.open.kind;
+    panel = S.panels[key] || (S.panels[key] = PANELS[S.open.kind](c, e));
+  }
+  return h("article", { class: "call" + (urg ? " urgent" : ""), id: "c-" + c.id },
+    h("div", { class: "when" }, c.quando || ""),
+    h("div", { class: "body" },
+      h("div", { class: "who" }, h("strong", {}, nameOf(c, e)), h("span", { class: "cond" }, (e && e.condominio) || c.condominio || "Condominio non indicato"), tel ? h("span", { class: "num" }, tel) : null),
+      h("p", { class: "what" + (cosa ? "" : " empty") }, cosa || "Motivo della chiamata non ancora riassunto."),
+      h("div", { class: "tags" }, tags), actions, panel));
+}
+
+function render() {
+  document.querySelectorAll(".chip").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.f === S.filter)));
+  const all = S.calls || [];
+  if (S.calls) {
+    document.getElementById("s-da").textContent = all.filter((c) => !c.gestita).length;
+    document.getElementById("s-urg").textContent = all.filter((c) => !c.gestita && (c.urgente || (S.enr[c.id] && S.enr[c.id].urgente))).length;
+    document.getElementById("s-oggi").textContent = all.filter((c) => isToday(parseQuando(c.quando))).length;
+  }
+  const meta = [];
+  if (S.at) meta.push(`Centralino aggiornato ${fmtTime(S.at)}`);
+  if (S.giro && S.giro.at) meta.push(`analisi di Claude ${fmtTime(Date.parse(S.giro.at))}`);
+  document.getElementById("meta").textContent = meta.join(" · ") || "In attesa dei dati del centralino…";
+
+  const n = document.getElementById("notice");
+  if (S.err) { n.className = "notice bad"; n.textContent = S.err; n.hidden = false; } else n.hidden = true;
+
+  const list = document.getElementById("list");
+  if (!S.calls) return;
+  const v = visible();
+  if (!v.length) {
+    list.replaceChildren(h("p", { class: "empty-state" }, S.filter === "da_gestire" ? "Nessuna chiamata da gestire. Le nuove compaiono qui da sole." : "Nessuna chiamata con questi filtri."));
+    return;
+  }
+  list.replaceChildren(...v.map(row));
+}
+
+document.querySelectorAll(".chip").forEach((b) => b.addEventListener("click", () => { S.filter = b.dataset.f; render(); }));
+document.getElementById("q").addEventListener("input", (ev) => { S.q = ev.target.value; render(); });
+
+(async () => {
+  const [mcp, db] = await Promise.all([claude.use("mcp"), claude.use("db")]);
+  S.mcp = mcp; S.db = db;
+  if (db) {
+    db.collection("chiamate").onSnapshot((snap) => {
+      const m = {}; snap.docs.forEach((d) => (m[d.id] = d.data())); S.enr = m;
+      for (const k of Object.keys(S.panels)) if (!(S.open && k === S.open.id + ":" + S.open.kind)) delete S.panels[k];
+      render();
+    }, () => {});
+    db.doc("stato/giro").onSnapshot((s) => { S.giro = s.exists ? s.data() : null; render(); }, () => {});
+  }
+  if (!mcp) { S.err = "Questa vista non può collegarsi ad Allerto. Apri la pagina in claude.ai con il tuo account dello studio."; render(); return; }
+  mcp.watchTool(CFG.allerto, "ultimeChiamate", { stato: "tutte" }, (ev) => {
+    if (ev.type === "data") {
+      const p = ev.result.payload || {};
+      S.calls = Array.isArray(p.chiamate) ? p.chiamate : [];
+      S.at = (ev.result.cache && ev.result.cache.storedAt) || Date.now();
+      S.err = null;
+    } else {
+      const code = ev.error && ev.error.code;
+      if (["needs_reauth", "server_not_connected", "selection_required", "blocked_by_policy", "approval_required", "not_in_manifest"].includes(code)) S.calls = [];
+      S.err = errText(ev.error, CFG.allerto);
+    }
+    render();
+  }, { cache: { staleTime: 60000, gcTime: 3600000 }, refetchInterval: 300000 });
+})();
+</script>

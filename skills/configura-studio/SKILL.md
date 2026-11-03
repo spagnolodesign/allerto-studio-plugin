@@ -2,7 +2,7 @@
 name: configura-studio
 description: "This skill should be used when a condominium-administration studio installs Allerto Studio for the first time, or asks to \"configura lo studio\", \"configura Allerto\", \"imposta il riepilogo del mattino\", \"cambia l'orario del riepilogo\", \"cambia la firma dello studio\", \"attiva le automazioni di Allerto\". It collects the studio's settings, creates the command center, saves the configuration and schedules the morning summary.\n"
 metadata:
-  version: "0.1.0"
+  version: "0.2.0"
 ---
 
 # Configura lo studio
@@ -34,7 +34,8 @@ Chiedi con AskUserQuestion, al massimo quattro domande per volta, solo ciò che 
 - email a cui mandare il riepilogo;
 - firma delle email (nome, indirizzo, telefono);
 - orario e giorni del riepilogo (default: 7:45, dal lunedì al venerdì);
-- invio del riepilogo automatico o in bozza (default: automatico, perché è un'email interna).
+- invio del riepilogo automatico o in bozza (default: automatico, perché è un'email interna);
+- modalità dei verbali: A solo moduli Danea, B solo PDF su Drive, C entrambi.
 
 Non inventare mai nomi o indirizzi email.
 
@@ -64,7 +65,16 @@ Includi tutti i campi raccolti, più `centroDiComando`, `versionePlugin` e `aggi
 - Riferisci in una frase se le esecuzioni partono da sole o chiedono approvazione, come indicato nella risposta dello strumento.
 - Se non esiste uno strumento per le attività programmate, dillo: il riepilogo si potrà chiedere a mano con "riepilogo del mattino".
 
-### 6. Prova
+### 6. Istruzioni del Progetto
+
+Le regole di lavoro arrivano con la skill `regole-studio` e valgono in ogni chat. Se lo studio lavora in un Progetto di claude.ai:
+- crea il documento di progetto `claude/regole-archivio-documenti.md` se non esiste (strumento Projects, `project_write`), partendo dalle sezioni della skill `regole-studio`;
+- compila `${CLAUDE_PLUGIN_ROOT}/shared/istruzioni-progetto.md` con i dati raccolti e mostralo in un blocco da copiare;
+- spiega in una frase che va incollato nelle istruzioni del Progetto: è l'unico passo manuale, perché Claude non può modificare le istruzioni di un Progetto.
+
+Se lo studio non usa un Progetto, salta questo passo.
+
+### 7. Prova
 
 Esegui subito la skill `riepilogo-mattino` una volta, in modalità bozza, così l'amministratore vede com'è fatta l'email. Riporta che la bozza è pronta e dove trovarla.
 
@@ -74,6 +84,7 @@ Una riga per ciascuna cosa:
 - il centro di comando: creato o aggiornato;
 - la configurazione salvata, con i campi principali;
 - il riepilogo programmato, con orario, giorni e se parte da solo;
+- le istruzioni del Progetto da incollare, se serve;
 - la bozza di prova.
 
 Poi un solo passo successivo naturale, per esempio "Quando vi fidate, possiamo attivare anche i solleciti ai fornitori".

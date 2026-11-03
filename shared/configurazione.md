@@ -13,6 +13,7 @@ Si legge e si scrive con lo strumento `ArtifactData` (`get` / `set` / `update` c
   "emailAmministratore": "mario@studiorossi.it",
   "firma": "Studio Rossi Amministrazioni\nVia Roma 1, Padova · 049 000000",
   "centroDiComando": "https://claude.ai/artifact/…",
+  "modalitaVerbali": "C",
   "riepilogo": {
     "attivo": true,
     "orario": "07:45",
@@ -27,12 +28,13 @@ Si legge e si scrive con lo strumento `ArtifactData` (`get` / `set` / `update` c
   "regoleDanea": {
     "statoChiusa": 3
   },
-  "versionePlugin": "0.1.0",
+  "versionePlugin": "0.2.0",
   "aggiornato": "2026-11-02T21:00:00+01:00"
 }
 ```
 
 - `riepilogo.invio`: `automatico` (manda l'email) oppure `bozza` (la lascia in bozza nella posta). Il riepilogo è interno allo studio, quindi `automatico` è il default.
+- `modalitaVerbali`: come lo studio archivia i verbali. `A` = solo moduli Danea, `B` = solo PDF su Drive, `C` = entrambi. La usa la skill `regole-studio`.
 - `soglie.giorniRitardoIntervento`: da quanti giorni di ritardo un intervento finisce nel riepilogo (0 = appena passa la data prevista).
 - `versionePlugin`: la versione del plugin che ha scritto per ultimo il centro di comando. La skill `centro-di-comando` la confronta con la propria per sapere se c'è un aggiornamento.
 

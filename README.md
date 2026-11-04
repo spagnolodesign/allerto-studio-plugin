@@ -6,6 +6,7 @@ Il centro di comando dello studio di amministrazione condominiale e le prime aut
 
 | Skill | Cosa fa | Come si chiede |
 |---|---|---|
+| `inizia-qui` | La prima chat dopo l'installazione: una lezione guidata per l'amministratore, un argomento alla volta, con prove sui dati dello studio. Salva i progressi e si riprende in un'altra chat | si attiva alla prima chat, oppure "inizia qui", "riprendiamo la lezione" |
 | `configura-studio` | Prima installazione: raccoglie i dati dello studio, crea il centro di comando, salva la configurazione e programma il riepilogo del mattino | "configura lo studio" |
 | `centro-di-comando` | Crea o aggiorna la dashboard live con il design Allerto: attività, interventi, segnalazioni, morosità, assemblee, polizze, chiamate | "aggiorna il centro di comando" |
 | `regole-studio` | Le regole di lavoro dello studio: fonti, bozze, ticket, memoria condivisa, verbali, forma delle risposte | si attiva da sola |
@@ -25,6 +26,7 @@ Il centro di comando dello studio di amministrazione condominiale e le prime aut
    - **Claude Code**: `/plugin install allerto-studio --marketplace spagnolodesign/allerto-studio-plugin`.
 2. Chiedi a Claude: "configura lo studio".
 3. Rispondi alle domande: nome dello studio, email dell'amministratore, firma, orario del riepilogo.
+4. Nella prima chat dello studio, Claude propone la lezione guidata (`inizia-qui`). Si può chiedere in ogni momento con "inizia qui".
 
 ## Aggiornare gli studi
 

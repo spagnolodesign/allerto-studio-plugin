@@ -101,4 +101,4 @@ Una riga per ciascuna cosa:
 - le istruzioni del Progetto da incollare, se serve;
 - la bozza di prova.
 
-Poi un solo passo successivo naturale, per esempio "Quando vi fidate, possiamo attivare anche i solleciti ai fornitori".
+Poi un solo passo successivo: se `allerto/onboarding` non è `completata`, proponi la lezione guidata della skill `inizia-qui` ("Vuole che le mostri come lavorare con me, un argomento alla volta?"); altrimenti un passo naturale, per esempio "Quando vi fidate, possiamo attivare anche i solleciti ai fornitori".

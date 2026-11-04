@@ -16,7 +16,7 @@ Il centro di comando dello studio di amministrazione condominiale e le prime aut
 
 ## Studi con BasLab (Arcadia)
 
-Per gli studi che usano BasLab c'è il plugin `allerto-studio-baslab`, nella cartella [`baslab/`](baslab/README.md), nello stesso marketplace. Uno studio installa solo uno dei due.
+Per gli studi che usano BasLab c'è il plugin `allerto-studio-baslab`, nel repository [`spagnolodesign/allerto-studio-baslab-plugin`](https://github.com/spagnolodesign/allerto-studio-baslab-plugin). Uno studio installa solo uno dei due.
 
 ## Cosa serve allo studio
 
@@ -28,7 +28,7 @@ Per gli studi che usano BasLab c'è il plugin `allerto-studio-baslab`, nella car
 
 1. Installa il plugin:
    - **claude.ai / Cowork (Team o Enterprise)**: l'Owner aggiunge questo repository come marketplace in *Impostazioni organizzazione > Plugins & skills* e rende disponibile `allerto-studio`.
-   - **Claude Code**: `/plugin install allerto-studio --marketplace spagnolodesign/allerto-studio-plugin`.
+   - **Claude Code**: `/plugin marketplace add spagnolodesign/allerto-studio-plugin`, poi `/plugin install allerto-studio@allerto`.
 2. Chiedi a Claude: "configura lo studio".
 3. Rispondi alle domande: nome dello studio, email dell'amministratore, firma, orario del riepilogo.
 4. Nella prima chat dello studio, Claude propone la lezione guidata (`inizia-qui`). Si può chiedere in ogni momento con "inizia qui".

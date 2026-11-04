@@ -4,18 +4,13 @@
     "name": "Allerto"
   },
   "metadata": {
-    "description": "I plugin di Allerto per gli studi di amministrazione condominiale (Danea Domustudio e BasLab/Arcadia)."
+    "description": "I plugin di Allerto per gli studi di amministrazione condominiale."
   },
   "plugins": [
     {
       "name": "allerto-studio",
       "source": "./",
       "description": "Il centro di comando dello studio di amministrazione condominiale e le automazioni di Allerto: dashboard live su Danea e centralino, riepilogo del mattino via email, configurazione per studio."
-    },
-    {
-      "name": "allerto-studio-baslab",
-      "source": "./baslab",
-      "description": "Il centro di comando dello studio e le automazioni di Allerto per gli studi che usano BasLab (Arcadia): dashboard live su BasLab e centralino, riepilogo del mattino, bozze delle email, configurazione per studio."
     }
   ]
 }

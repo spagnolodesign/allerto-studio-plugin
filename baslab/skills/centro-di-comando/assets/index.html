@@ -1,0 +1,785 @@
+<meta name="dash-one-writer">
+<link rel="stylesheet" href="fonts.css">
+<style>
+  #dash-root { --dash-gutter: 0; }
+  .al {
+    --al-bg: #F1EEE6; --al-panel: #FAF9F5; --al-ink: #141413; --al-ink-2: #3D3D3A; --al-muted: #6E6962;
+    --al-line: #DCD8CD; --al-line-soft: #E8E4DA; --al-accent: #EE4A1C; --al-accent-hover: #C93A12; --al-ph: #8A8478;
+    --al-sans: "Hanken Grotesk", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --al-serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+    --al-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    --al-ease: cubic-bezier(.2,.7,.2,1);
+    background: var(--al-bg); color: var(--al-ink); font-family: var(--al-sans); font-size: 16px; line-height: 1.5;
+    -webkit-font-smoothing: antialiased; min-height: 100%;
+  }
+  .al * { box-sizing: border-box; }
+  .al h1, .al h2, .al h3, .al p { margin: 0; }
+  .al-wrap { max-width: 1180px; margin: 0 auto; padding: 0 32px 64px; display: grid; gap: 16px; }
+
+  .al-top { position: sticky; top: 0; z-index: 3; background: rgba(241,238,230,.94); border-bottom: 1px solid var(--al-line); }
+  .al-top-in { max-width: 1180px; margin: 0 auto; padding: 0 32px; height: 60px; display: flex; align-items: center; gap: 24px; }
+  .al-logo { font-weight: 700; letter-spacing: -.035em; line-height: 1; font-size: 1.6rem; color: var(--al-ink); white-space: nowrap; }
+  .al-logo b { color: var(--al-accent); font-weight: 700; }
+  .al-studio { font-size: .85rem; color: var(--al-muted); white-space: nowrap; }
+  .al-nav { display: flex; gap: 18px; overflow-x: auto; scrollbar-width: none; font-size: .92rem; color: var(--al-ink-2); margin-left: auto; }
+  .al-nav::-webkit-scrollbar { display: none; }
+  .al-nav a { color: inherit; text-decoration: none; white-space: nowrap; transition: color .15s ease; }
+  .al-nav a:hover { color: var(--al-accent); }
+
+  .al-hero { padding: 40px 0 16px; display: grid; grid-template-columns: 1.45fr 1fr; gap: 48px; align-items: end; }
+  .al-eyebrow { font-size: .88rem; color: var(--al-muted); margin-bottom: 8px; }
+  .al-h1 { font-size: clamp(1.8rem, 3.4vw, 2.4rem); font-weight: 700; letter-spacing: -.03em; line-height: 1.05; }
+  .al-h1 em { font-style: normal; color: var(--al-accent); }
+  .al-lede { font-family: var(--al-serif); font-size: 1.06rem; line-height: 1.5; color: var(--al-ink-2); }
+  .al-lede b { font-family: var(--al-sans); font-weight: 700; color: var(--al-ink); font-variant-numeric: tabular-nums; }
+  .al-meta { font-family: var(--al-serif); font-size: .92rem; color: rgba(20,20,19,.75); margin-top: 10px; }
+
+  .al-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 10.5rem), 1fr)); gap: 16px; }
+  .al-stat { background: var(--al-panel); border: 1px solid var(--al-line); border-radius: 16px; padding: 18px 20px; }
+  .al-stat:has(.is-bad) { box-shadow: 0 0 0 1px rgba(238,74,28,.4); }
+  .al-l { font-size: .85rem; color: var(--al-muted); }
+  .al-v { font-size: 2.1rem; font-weight: 700; letter-spacing: -.02em; line-height: 1; margin-top: 10px; font-variant-numeric: tabular-nums; min-height: 1em; }
+  .al-hint { font-size: .78rem; color: var(--al-muted); margin-top: 8px; }
+
+  .al-card { background: var(--al-panel); border: 1px solid var(--al-line); border-radius: 16px; padding: 22px 22px 18px; min-width: 0; scroll-margin-top: 76px; }
+  .al-card-h { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .al-n { font-family: var(--al-mono); font-size: .74rem; color: var(--al-muted); }
+  .al-card h2 { font-size: 1.3rem; font-weight: 700; letter-spacing: -.015em; line-height: 1.2; }
+  .al-note { font-family: var(--al-serif); font-size: .98rem; line-height: 1.45; color: var(--al-ink-2); margin: 6px 0 16px; max-width: 68ch; }
+  .al-note b { font-family: var(--al-sans); font-weight: 700; color: var(--al-ink); }
+  .al-figs { display: flex; flex-wrap: wrap; gap: 12px; margin: 0 0 16px; }
+  .al-figs .al-stat { background: var(--al-bg); min-width: 9.5rem; flex: 1 1 9.5rem; padding: 14px 16px; }
+  .al-figs .al-v { font-size: 1.7rem; margin-top: 8px; }
+  .al-h3 { font-size: 1rem; font-weight: 700; letter-spacing: -.01em; margin: 20px 0 10px; }
+  .al-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); gap: 16px; }
+
+  .al-tbl { border: 1px solid var(--al-line); border-radius: 12px; overflow: auto; background: var(--al-panel); }
+  .al-tbl.al-tall { max-height: 27rem; }
+  .al table { width: 100%; border-collapse: collapse; font-size: .9rem; font-variant-numeric: tabular-nums; }
+  .al th { text-align: left; font-weight: 400; font-size: .8rem; color: var(--al-muted); padding: 11px 14px; border-bottom: 1px solid var(--al-line); position: sticky; top: 0; background: var(--al-panel); white-space: nowrap; z-index: 1; }
+  .al td { padding: 11px 14px; border-bottom: 1px solid var(--al-line-soft); vertical-align: top; color: var(--al-ink); }
+  .al tbody tr { transition: background .15s ease; }
+  .al tbody tr:hover { background: var(--al-bg); }
+  .al tr:last-child td { border-bottom: 0; }
+  .al td.num, .al th.num { text-align: right; }
+  .al td.nowrap { white-space: nowrap; }
+  .al .mono { font-family: var(--al-mono); font-size: .8rem; color: var(--al-ink-2); }
+  .al .cc-muted { color: var(--al-muted); }
+  .al .is-bad { font-weight: 700; color: var(--al-ink); }
+  .al .al-v.is-bad { color: var(--al-accent); }
+  .al .is-warn { font-weight: 600; color: var(--al-ink); }
+  .al .is-ok { color: var(--al-ink-2); }
+
+  .al .badge { display: inline-flex; align-items: center; border-radius: 999px; font-family: var(--al-mono); font-size: .64rem; letter-spacing: .1em; text-transform: uppercase; padding: 3px 9px; white-space: nowrap; line-height: 1.3; }
+  .al .b-soft { color: var(--al-ink-2); background: var(--al-line-soft); }
+  .al .b-hot { background: var(--al-accent); color: #fff; }
+  .al .b-ink { background: var(--al-ink); color: var(--al-panel); }
+  .al .b-ok { border: 1px solid var(--al-ink); color: var(--al-ink); padding: 2px 8px; }
+
+  .al-input { width: 100%; max-width: 24rem; border-radius: 10px; background: var(--al-panel); border: 1px solid var(--al-line); padding: 10px 14px; font: inherit; font-size: .92rem; color: var(--al-ink); margin: 0 0 12px; transition: border-color .15s ease; }
+  .al-input::placeholder { color: var(--al-ph); }
+  .al-input:focus { outline: none; border-color: var(--al-ink); box-shadow: 0 0 0 3px rgba(238,74,28,.3); }
+  .al-check { display: inline-flex; align-items: center; gap: 8px; font-size: .85rem; color: var(--al-muted); margin: 0 0 12px; cursor: pointer; }
+  .al-check input { accent-color: var(--al-ink); }
+  .al a.cc-link { color: var(--al-ink); text-decoration: none; font-weight: 600; transition: color .15s ease; }
+  .al a.cc-link:hover { color: var(--al-accent); }
+  .al a.cc-link::after { content: " →"; color: var(--al-muted); font-weight: 400; }
+
+  .cc-fail { display: flex; align-items: center; justify-content: center; gap: 8px; color: var(--al-muted); font-size: .85rem; min-height: 4rem; }
+  .cc-fail::before { content: ""; width: .375rem; height: .375rem; border-radius: 50%; background: var(--al-accent); }
+  .cc-chart { position: relative; min-height: 10rem; }
+  .al-legend { display: flex; gap: 16px; font-size: .8rem; color: var(--al-muted); margin: 0 0 8px; }
+  .al-sw { display: inline-block; width: .7rem; height: .7rem; border-radius: 3px; margin-right: .4rem; vertical-align: -1px; }
+  .cc-tip { position: absolute; pointer-events: none; background: var(--al-panel); border: 1px solid var(--al-line); border-radius: 10px; padding: 8px 12px; font-size: .8rem; color: var(--al-ink); white-space: nowrap; z-index: 2; }
+  .cc-tip-h { color: var(--al-muted); font-family: var(--al-mono); font-size: .72rem; margin-bottom: 2px; }
+
+  .al-foot { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; padding: 24px 0 0; border-top: 1px solid var(--al-line); margin-top: 16px; }
+  .al-foot .al-logo { font-size: 1.1rem; }
+  .al-foot p { font-size: .8rem; color: var(--al-muted); }
+
+  .al [data-dash-source-state=empty] { color: transparent; }
+  .al [data-dash-source-state=refreshing] { opacity: .5; transition: opacity .25s var(--al-ease); }
+
+  @media (max-width: 760px) {
+    .al-wrap, .al-top-in { padding-left: 18px; padding-right: 18px; }
+    .al-hero { grid-template-columns: 1fr; gap: 16px; padding-top: 28px; }
+    .al-studio { display: none; }
+    .al .cc-hide-sm { display: none; }
+  }
+  .cc-fail.cc-empty::before { background: var(--al-line); }
+</style>
+
+<div class="al">
+  <header class="al-top">
+    <div class="al-top-in">
+      <span class="al-logo">allerto<b>.</b></span>
+      <span class="al-studio">Centro di comando · BasLab</span>
+      <nav class="al-nav" aria-label="Sezioni">
+        <a href="#attivita">Attività</a>
+        <a href="#ticket">Ticket</a>
+        <a href="#rate">Rate scadute</a>
+        <a href="#solleciti">Solleciti</a>
+        <a href="#assemblee">Assemblee</a>
+        <a href="#polizze">Polizze</a>
+        <a href="#chiamate">Chiamate</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="al-wrap">
+    <section class="al-hero" id="inizio">
+      <div>
+        <p class="al-eyebrow"><span data-draw="oggi">—</span></p>
+        <h1 class="al-h1">Cosa c'è da fare <em>oggi</em>.</h1>
+      </div>
+      <div>
+        <p class="al-lede">Chiamate da gestire <b data-draw="ckpi" data-source="chiamate_kpi" data-field="DA_GESTIRE" data-row="0" data-fetchpriority="high">—</b> · attività da assegnare <b data-draw="akpi" data-source="attivita_kpi" data-field="DA_ASSEGNARE" data-row="0">—</b> · assemblee convocate <b data-draw="askpi" data-source="assemblee_kpi" data-field="CONVOCATE" data-row="0">—</b> · rate scadute non incassate <b data-draw="rkpi" data-source="rate_kpi" data-field="SCADUTO" data-row="0">—</b></p>
+        <p class="al-meta">BasLab è letto in tempo reale, a ogni apertura della pagina. Anche chiamate e attività di Allerto sono in tempo reale.</p>
+      </div>
+    </section>
+
+    <section class="al-stats" aria-label="Riepilogo">
+      <div class="al-stat">
+        <p class="al-l">Condomini gestiti</p>
+        <p class="al-v dash-skeleton" data-draw="cokpi" data-source="condomini_kpi" data-field="CONDOMINI" data-row="0" data-fetchpriority="high">—</p>
+        <p class="al-hint">in BasLab</p>
+      </div>
+      <div class="al-stat">
+        <p class="al-l">Ticket in BasLab</p>
+        <p class="al-v dash-skeleton" data-draw="tkpi" data-source="ticket_kpi" data-field="TICKET" data-row="0">—</p>
+        <p class="al-hint">nell'elenco ticket del gestionale</p>
+      </div>
+      <div class="al-stat">
+        <p class="al-l">Rate scadute non incassate</p>
+        <p class="al-v dash-skeleton" data-draw="rkpi" data-tone="bad" data-source="rate_kpi" data-field="SCADUTO" data-row="0">—</p>
+        <p class="al-hint">residuo delle emissioni già scadute</p>
+      </div>
+      <div class="al-stat">
+        <p class="al-l">In scadenza entro 30 giorni</p>
+        <p class="al-v dash-skeleton" data-draw="rkpi" data-tone="warn" data-source="rate_kpi" data-field="IN_SCADENZA_30" data-row="0">—</p>
+        <p class="al-hint">residuo ancora da incassare</p>
+      </div>
+      <div class="al-stat">
+        <p class="al-l">Assemblee convocate</p>
+        <p class="al-v dash-skeleton" data-draw="askpi" data-tone="warn" data-source="assemblee_kpi" data-field="CONVOCATE" data-row="0">—</p>
+        <p class="al-hint">seconda convocazione da oggi in poi</p>
+      </div>
+      <div class="al-stat">
+        <p class="al-l">Chiamate da gestire</p>
+        <p class="al-v dash-skeleton" data-draw="ckpi" data-source="chiamate_kpi" data-field="DA_GESTIRE" data-row="0">—</p>
+        <p class="al-hint">sulle ultime del centralino</p>
+      </div>
+    </section>
+
+    <section class="al-card" id="attivita">
+      <div class="al-card-h"><span class="al-n">01</span><h2>Attività</h2></div>
+      <p class="al-note">Le attività in Allerto, dalla più recente: nate dalle chiamate o create dallo studio. Si assegnano e si chiudono nell'app Allerto.</p>
+      <div class="al-figs">
+        <div class="al-stat">
+          <p class="al-l">Da assegnare</p>
+          <p class="al-v dash-skeleton" data-draw="akpi" data-source="attivita_kpi" data-field="DA_ASSEGNARE" data-row="0" data-fetchpriority="high">—</p>
+        </div>
+        <div class="al-stat">
+          <p class="al-l">In corso</p>
+          <p class="al-v dash-skeleton" data-draw="akpi" data-source="attivita_kpi" data-field="IN_CORSO" data-row="0">—</p>
+        </div>
+        <div class="al-stat">
+          <p class="al-l">Urgenti aperte</p>
+          <p class="al-v dash-skeleton" data-draw="akpi" data-source="attivita_kpi" data-field="URGENTI_APERTE" data-row="0">—</p>
+        </div>
+        <div class="al-stat">
+          <p class="al-l">Data prevista passata</p>
+          <p class="al-v dash-skeleton" data-draw="akpi" data-source="attivita_kpi" data-field="SCADUTE" data-row="0">—</p>
+        </div>
+      </div>
+      <label class="al-check"><input class="cc-show-closed" type="checkbox"> Mostra anche quelle fatte e annullate</label>
+      <div class="al-tbl al-tall">
+        <table data-source="attivita" data-row-key="id">
+          <thead><tr>
+            <th data-field="creata">Creata</th>
+            <th data-field="titolo">Attività</th>
+            <th data-field="condominio">Condominio</th>
+            <th data-field="priorita">Priorità</th>
+            <th data-field="stato">Stato</th>
+            <th class="cc-hide-sm" data-field="affidataA">Affidata a</th>
+            <th class="cc-hide-sm" data-field="dataPrevista">Prevista</th>
+          </tr></thead>
+          <tbody data-draw="attivita"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="al-card" id="ticket">
+      <div class="al-card-h"><span class="al-n">02</span><h2>Ticket in BasLab</h2></div>
+      <p class="al-note">I ticket del gestionale (guasti, interventi, richieste), come li restituisce l'elenco ticket di BasLab. Si aprono, si affidano e si chiudono in BasLab.</p>
+      <div class="al-tbl al-tall">
+        <table data-source="ticket" data-row-key="id">
+          <thead><tr>
+            <th data-field="data">Data</th>
+            <th data-field="titolo">Ticket</th>
+            <th data-field="immobile">Condominio</th>
+            <th data-field="priorita">Priorità</th>
+            <th data-field="stato">Stato</th>
+            <th class="cc-hide-sm" data-field="fornitore">Fornitore</th>
+          </tr></thead>
+          <tbody data-draw="ticket"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="al-card" id="rate">
+      <div class="al-card-h"><span class="al-n">03</span><h2>Rate scadute non incassate</h2></div>
+      <p class="al-note">Per ogni emissione di rate già scaduta, la parte non ancora incassata, su tutte le gestioni di BasLab. È il residuo lordo: i crediti dei singoli condòmini non sono scalati. Per i morosi per nome, con le rate di ciascuno, chiedete in chat: «morosi del condominio …».</p>
+      <div class="al-figs">
+        <div class="al-stat">
+          <p class="al-l">Residuo scaduto</p>
+          <p class="al-v dash-skeleton" data-draw="rkpi" data-source="rate_kpi" data-field="SCADUTO" data-row="0">—</p>
+        </div>
+        <div class="al-stat">
+          <p class="al-l">Condomini con residuo</p>
+          <p class="al-v dash-skeleton" data-draw="rkpi" data-source="rate_kpi" data-field="CONDOMINI" data-row="0">—</p>
+        </div>
+        <div class="al-stat">
+          <p class="al-l">Scadenze con residuo</p>
+          <p class="al-v dash-skeleton" data-draw="rkpi" data-source="rate_kpi" data-field="SCADENZE" data-row="0">—</p>
+        </div>
+      </div>
+      <h3 class="al-h3">Residuo scaduto per condominio</h3>
+      <div class="cc-chart dash-skeleton" data-draw="rate-cond" data-source="rate_condominio"></div>
+      <h3 class="al-h3">Scadenze con residuo</h3>
+      <input class="al-input cc-search" type="search" placeholder="Cerca condominio o gestione" aria-label="Cerca tra le scadenze">
+      <div class="al-tbl al-tall">
+        <table data-source="rate_scadute" data-row-key="KEY">
+          <thead><tr>
+            <th data-field="SCADENZA">Scadenza</th>
+            <th data-field="CONDOMINIO">Condominio</th>
+            <th data-field="GESTIONE">Gestione</th>
+            <th class="num cc-hide-sm" data-field="IMPORTO">Emesso</th>
+            <th class="num cc-hide-sm" data-field="INCASSATO">Incassato</th>
+            <th class="num" data-field="RESIDUO">Residuo</th>
+          </tr></thead>
+          <tbody class="cc-rate" data-draw="rate_scadute"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="al-card" id="solleciti">
+      <div class="al-card-h"><span class="al-n">04</span><h2>Solleciti</h2></div>
+      <p class="al-note">Gli ultimi solleciti generati in BasLab, dal più recente, con l'importo sollecitato e se sono stati inviati.</p>
+      <div class="al-tbl al-tall">
+        <table data-source="solleciti" data-row-key="id">
+          <thead><tr>
+            <th data-field="dataGenerazione">Generato</th>
+            <th data-field="immobile">Condominio</th>
+            <th data-field="nominativo">Condòmino</th>
+            <th class="cc-hide-sm" data-field="configurazioneSollecitoRate">Livello</th>
+            <th class="num" data-field="totaleSollecitato">Importo</th>
+            <th data-field="dataUltimoInvio">Inviato</th>
+          </tr></thead>
+          <tbody data-draw="solleciti"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="al-grid">
+      <section class="al-card" id="assemblee">
+        <div class="al-card-h"><span class="al-n">05</span><h2>Assemblee</h2></div>
+        <p class="al-note">Convocate e da tenere: <b data-draw="askpi" data-tone="warn" data-source="assemblee_kpi" data-field="CONVOCATE" data-row="0">—</b>. Sotto, le assemblee in BasLab, dalla più recente.</p>
+        <div class="al-tbl al-tall">
+          <table data-source="assemblee" data-row-key="id">
+            <thead><tr>
+              <th data-field="dataSeconda">2ª conv.</th>
+              <th data-field="anagrafica">Condominio</th>
+              <th class="cc-hide-sm" data-field="bilancio">Gestione</th>
+              <th data-field="statoVerbale">Stato</th>
+            </tr></thead>
+            <tbody data-draw="assemblee"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="al-card" id="polizze">
+        <div class="al-card-h"><span class="al-n">06</span><h2>Polizze</h2></div>
+        <p class="al-note">Le polizze assicurative registrate in BasLab, con la scadenza. Giorni negativi: già scaduta.</p>
+        <div class="al-tbl al-tall">
+          <table data-source="polizze" data-row-key="id">
+            <thead><tr>
+              <th data-field="immobile">Condominio</th>
+              <th data-field="numero">Polizza</th>
+              <th class="cc-hide-sm" data-field="compagnia">Compagnia</th>
+              <th data-field="scadenza">Scadenza</th>
+              <th class="num" data-field="giorni">Giorni</th>
+            </tr></thead>
+            <tbody data-draw="polizze"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <section class="al-card" id="chiamate">
+      <div class="al-card-h"><span class="al-n">07</span><h2>Chiamate del centralino</h2></div>
+      <p class="al-note">Le ultime chiamate risposte da Allerto, dalla più recente.</p>
+      <div class="al-tbl al-tall">
+        <table data-source="chiamate" data-row-key="id">
+          <thead><tr>
+            <th data-field="quando">Quando</th>
+            <th data-field="chi">Chi</th>
+            <th class="cc-hide-sm" data-field="condominio">Condominio</th>
+            <th data-field="cosa">Cosa voleva</th>
+            <th data-source="chiamate_stato" data-field="stato">Stato</th>
+          </tr></thead>
+          <tbody data-draw="chiamate"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer class="al-foot">
+      <span class="al-logo">allerto<b>.</b></span>
+      <p>Centro di comando dello studio · dati da BasLab (Arcadia) e dal centralino Allerto</p>
+    </footer>
+  </div>
+</div>
+
+<script>
+  /* ---------- lettura delle risposte ---------- */
+  const ccParse = (answer) => (typeof answer === 'string' ? JSON.parse(answer) : answer);
+  const ccErr = (a, fallback) => new Error((a && (a.errore || a.error || a.message)) || fallback);
+  const ccPick = (r, keys) => { for (const k of keys) { if (r && r[k] != null && r[k] !== '') return r[k]; } return null; };
+  const ccDay = (s) => {
+    // BasLab manda le date in UTC (es. 2026-04-14T22:00:00Z = 15 aprile a Roma): si portano al giorno di Roma.
+    if (!s) return '';
+    const d = new Date(s);
+    if (isNaN(d)) return String(s).slice(0, 10);
+    return new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Rome', year: 'numeric', month: '2-digit', day: '2-digit' }).format(d);
+  };
+  const ccToday = () => ccDay(new Date().toISOString());
+  const ccAddDays = (iso, n) => { const d = new Date(iso + 'T12:00:00Z'); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); };
+  const ccDiff = (a, b) => Math.round((new Date(a + 'T12:00:00Z') - new Date(b + 'T12:00:00Z')) / 86400000);
+
+  const ccGrid = (fallback) => ({ answer }) => {
+    const a = ccParse(answer);
+    if (!a || !Array.isArray(a.data)) throw ccErr(a, fallback);
+    return { data: a.data, columns: a.data.length ? Object.keys(a.data[0]) : [], cut: typeof a.totalCount === 'number' && a.totalCount > a.data.length };
+  };
+
+  dash.loader('condomini', {
+    description: 'L’elenco "elementi" di elenca_condomini, una riga per condominio di BasLab',
+    fn: ({ answer }) => {
+      const a = ccParse(answer);
+      if (!a || !Array.isArray(a.elementi)) throw ccErr(a, 'Risposta senza condomini');
+      return { data: a.elementi, columns: ['id', 'nome'] };
+    },
+  });
+  dash.calc('condomini_kpi', {
+    inputs: ['condomini'],
+    title: 'Condomini gestiti',
+    description: 'Quanti condomini restituisce BasLab.',
+    fn: (c) => [{ CONDOMINI: c.length }],
+  });
+
+  dash.loader('attivita', {
+    description: 'L’elenco "attivita" della risposta di Allerto, una riga per attività',
+    fn: ({ answer }) => {
+      const a = ccParse(answer);
+      if (!a || !Array.isArray(a.attivita)) throw ccErr(a, 'Risposta senza attività');
+      return { data: a.attivita, columns: ['id', 'creata', 'titolo', 'condominio', 'priorita', 'stato', 'affidataA', 'dataPrevista', 'pratica', 'link'], cut: !!a.altre };
+    },
+  });
+  dash.calc('attivita_kpi', {
+    inputs: ['attivita'],
+    title: 'Attività aperte',
+    description: 'Attività da assegnare, in corso, urgenti non chiuse e con data prevista già passata (fatte e annullate escluse).',
+    fn: (attivita) => {
+      const aperte = attivita.filter((x) => x.stato !== 'fatta' && x.stato !== 'annullata');
+      const oggi = ccToday();
+      return [{
+        DA_ASSEGNARE: aperte.filter((x) => x.stato === 'da assegnare').length,
+        IN_CORSO: aperte.filter((x) => x.stato === 'in corso').length,
+        URGENTI_APERTE: aperte.filter((x) => x.priorita === 'urgente').length,
+        SCADUTE: aperte.filter((x) => x.dataPrevista && String(x.dataPrevista).slice(0, 10) < oggi).length,
+      }];
+    },
+  });
+
+  dash.loader('ticket', { description: 'Le righe "data" dell’elenco ticket di BasLab (Ticket/paged-list)', fn: ccGrid('Risposta senza ticket') });
+  dash.calc('ticket_kpi', {
+    inputs: ['ticket'],
+    title: 'Ticket in BasLab',
+    description: 'Quanti ticket restituisce l’elenco ticket di BasLab.',
+    fn: (t) => [{ TICKET: t.length }],
+  });
+
+  dash.loader('rate_aperte', {
+    description: 'Le emissioni di rate con residuo, raggruppate da BasLab per condominio, gestione e scadenza; una riga per scadenza',
+    fn: ({ answer }) => {
+      const a = ccParse(answer);
+      if (!a || !Array.isArray(a.data)) throw ccErr(a, 'Risposta senza rate');
+      const rows = [];
+      for (const c of a.data) {
+        for (const g of c.items || []) {
+          for (const s of g.items || []) {
+            const [residuo, importo, incassato] = s.summary || [];
+            rows.push({
+              KEY: `${String(c.key).trim()}|${g.key}|${s.key}`,
+              CONDOMINIO: String(c.key || '').trim(),
+              GESTIONE: g.key || '',
+              SCADENZA: ccDay(s.key),
+              IMPORTO: importo, INCASSATO: incassato, RESIDUO: residuo,
+            });
+          }
+        }
+      }
+      return { data: rows, columns: ['KEY', 'CONDOMINIO', 'GESTIONE', 'SCADENZA', 'IMPORTO', 'INCASSATO', 'RESIDUO'] };
+    },
+  });
+  dash.calc('rate_scadute', {
+    inputs: ['rate_aperte'],
+    title: 'Scadenze con residuo',
+    description: 'Le scadenze di rate fino a oggi con una parte non incassata, dalla più vecchia.',
+    fn: (r) => r.filter((x) => x.SCADENZA && x.SCADENZA <= ccToday()).sort((a, b) => (a.SCADENZA < b.SCADENZA ? -1 : 1)),
+  });
+  dash.calc('rate_condominio', {
+    inputs: ['rate_scadute'],
+    title: 'Residuo scaduto per condominio',
+    description: 'Somma del residuo delle rate scadute per condominio, dal più alto.',
+    fn: (r) => {
+      const m = new Map();
+      for (const x of r) {
+        const o = m.get(x.CONDOMINIO) || { CONDOMINIO: x.CONDOMINIO, RESIDUO: 0, IMPORTO: 0, INCASSATO: 0, SCADENZE: 0 };
+        o.RESIDUO += Number(x.RESIDUO) || 0; o.IMPORTO += Number(x.IMPORTO) || 0; o.INCASSATO += Number(x.INCASSATO) || 0; o.SCADENZE += 1;
+        m.set(x.CONDOMINIO, o);
+      }
+      return [...m.values()].sort((a, b) => b.RESIDUO - a.RESIDUO);
+    },
+  });
+  dash.calc('rate_kpi', {
+    inputs: ['rate_aperte'],
+    title: 'Rate: scaduto e in scadenza',
+    description: 'Residuo delle rate già scadute, numero di condomini e di scadenze coinvolte, residuo in scadenza nei prossimi 30 giorni.',
+    fn: (r) => {
+      const oggi = ccToday();
+      const fra30 = ccAddDays(oggi, 30);
+      const sc = r.filter((x) => x.SCADENZA && x.SCADENZA <= oggi);
+      return [{
+        SCADUTO: sc.reduce((s, x) => s + (Number(x.RESIDUO) || 0), 0),
+        CONDOMINI: new Set(sc.map((x) => x.CONDOMINIO)).size,
+        SCADENZE: sc.length,
+        IN_SCADENZA_30: r.filter((x) => x.SCADENZA > oggi && x.SCADENZA <= fra30).reduce((s, x) => s + (Number(x.RESIDUO) || 0), 0),
+      }];
+    },
+  });
+
+  dash.loader('solleciti', { description: 'Le righe "data" dell’elenco solleciti di BasLab', fn: ccGrid('Risposta senza solleciti') });
+  dash.loader('assemblee', { description: 'Le righe "data" dell’elenco assemblee di BasLab', fn: ccGrid('Risposta senza assemblee') });
+  dash.calc('assemblee_kpi', {
+    inputs: ['assemblee'],
+    title: 'Assemblee convocate',
+    description: 'Assemblee con la seconda convocazione da oggi in poi e senza verbale.',
+    fn: (a) => [{ CONVOCATE: a.filter((x) => x.dataSeconda && ccDay(x.dataSeconda) >= ccToday() && !x.statoVerbale).length }],
+  });
+  dash.loader('polizze', { description: 'Le righe "data" dell’elenco polizze di BasLab', fn: ccGrid('Risposta senza polizze') });
+
+  dash.loader('chiamate', {
+    description: 'L’elenco "chiamate" della risposta di Allerto, una riga per chiamata',
+    fn: ({ answer }) => {
+      const a = ccParse(answer);
+      if (!a || !Array.isArray(a.chiamate)) throw ccErr(a, 'Risposta senza chiamate');
+      return { data: a.chiamate, columns: ['id', 'quando', 'chi', 'condominio', 'cosa', 'urgente', 'gestita', 'suGestionale', 'scontento'] };
+    },
+  });
+  dash.calc('chiamate_kpi', {
+    inputs: ['chiamate'],
+    title: 'Chiamate da gestire',
+    description: 'Quante delle ultime chiamate non sono ancora segnate come gestite.',
+    fn: (chiamate) => [{ DA_GESTIRE: chiamate.filter((c) => !c.gestita).length, TOTALE: chiamate.length }],
+  });
+  dash.calc('chiamate_stato', {
+    inputs: ['chiamate'],
+    title: 'Stato di ogni chiamata',
+    description: 'Gestita o da gestire, secondo il campo "gestita" della chiamata.',
+    fn: (chiamate) => chiamate.map((c) => ({ id: c.id, stato: c.gestita ? 'Gestita' : 'Da gestire' })),
+  });
+
+  /* ---------- disegno ---------- */
+  const ccNum = (v) => (v == null || v === '' ? '—' : d3.format(',')(Number(v)));
+  const ccEur = (v, whole) => (v == null || v === '' ? '—' : new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', minimumFractionDigits: whole ? 0 : 2, maximumFractionDigits: whole ? 0 : 2 }).format(Number(v)));
+  const ccDate = (s) => {
+    if (!s) return '';
+    const iso = /^\d{4}-\d{2}-\d{2}$/.test(String(s)) ? String(s) : ccDay(s);
+    const d = new Date(iso + 'T12:00:00Z');
+    return isNaN(d) ? String(s) : new Intl.DateTimeFormat('it-IT', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' }).format(d);
+  };
+  const ccMsg = (tbody, cols, text, fail) => {
+    const tr = document.createElement('tr');
+    const td = document.createElement('td');
+    td.colSpan = cols;
+    const div = document.createElement('div');
+    div.className = fail ? 'cc-fail' : 'cc-fail cc-empty';
+    div.textContent = text;
+    td.append(div);
+    tr.append(td);
+    tbody.replaceChildren(tr);
+  };
+  const ccFailRow = (tbody, cols) => ccMsg(tbody, cols, 'Caricamento non riuscito', true);
+  const ccCell = (tr, text, cls) => {
+    const td = document.createElement('td');
+    if (cls) td.className = cls;
+    td.textContent = text == null ? '' : String(text);
+    tr.append(td);
+    return td;
+  };
+  const ccBadge = (tr, text, kind) => {
+    const td = document.createElement('td');
+    const b = document.createElement('span');
+    b.className = 'badge ' + kind;
+    b.textContent = text == null ? '' : String(text);
+    td.append(b);
+    tr.append(td);
+    return td;
+  };
+  const ccTone = (el, n, tone) => {
+    el.classList.remove('is-bad', 'is-warn');
+    if (tone && Number(n) > 0) el.classList.add(tone === 'bad' ? 'is-bad' : 'is-warn');
+  };
+  const ccKpi = (name, source, fmt, toneOf) => dash.draw(name, (el) => {
+    const d = dash.data(source);
+    el.classList.toggle('dash-skeleton', d.status === 'loading');
+    if (d.status !== 'ok' || !d.data.length) { el.textContent = '—'; return; }
+    const v = d.data[0][el.dataset.field];
+    el.textContent = fmt(v, el.dataset.field);
+    ccTone(el, v, el.dataset.tone || toneOf(el));
+  });
+
+  dash.draw('oggi', (el) => {
+    const s = new Intl.DateTimeFormat('it-IT', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Rome' }).format(new Date());
+    el.textContent = s.charAt(0).toUpperCase() + s.slice(1);
+  });
+
+  const ccGo = (id) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+    dash.setLink(id);
+  };
+  document.querySelectorAll('.al-nav a').forEach((a) => a.addEventListener('click', (event) => {
+    event.preventDefault();
+    ccGo((a.getAttribute('href') || '').slice(1));
+  }));
+  if (location.hash.length > 1 && document.getElementById(location.hash.slice(1))) setTimeout(() => ccGo(location.hash.slice(1)), 300);
+
+  ccKpi('cokpi', 'condomini_kpi', (v) => ccNum(v), () => '');
+  ccKpi('tkpi', 'ticket_kpi', (v) => ccNum(v), () => '');
+  ccKpi('ckpi', 'chiamate_kpi', (v) => ccNum(v), () => 'warn');
+  ccKpi('askpi', 'assemblee_kpi', (v) => ccNum(v), () => 'warn');
+  ccKpi('rkpi', 'rate_kpi', (v, f) => (f === 'SCADUTO' || f === 'IN_SCADENZA_30' ? ccEur(v, true) : ccNum(v)), (el) => (el.tagName === 'B' ? 'bad' : ''));
+  ccKpi('akpi', 'attivita_kpi', (v) => ccNum(v), (el) => (el.dataset.field === 'IN_CORSO' ? '' : el.dataset.field === 'DA_ASSEGNARE' ? 'warn' : 'bad'));
+
+  document.querySelectorAll('.cc-show-closed').forEach((box) => box.addEventListener('change', () => dash.draw('attivita')));
+
+  dash.draw('attivita', (tbody) => {
+    const d = dash.data('attivita');
+    if (d.status === 'error') return ccFailRow(tbody, 7);
+    if (d.status !== 'ok') { tbody.replaceChildren(); return; }
+    if (!d.data.length) return ccMsg(tbody, 7, 'Nessuna attività in Allerto');
+    const showClosed = [...document.querySelectorAll('.cc-show-closed')].some((b) => b.checked);
+    const oggi = ccToday();
+    tbody.replaceChildren(...d.data.map((r) => {
+      const chiusa = r.stato === 'fatta' || r.stato === 'annullata';
+      const tr = document.createElement('tr');
+      tr.dataset.key = String(r.id);
+      tr.hidden = chiusa && !showClosed;
+      ccCell(tr, ccDate(r.creata), 'nowrap mono');
+      const tdT = ccCell(tr, '');
+      if (r.link && /^https:\/\/app\.allerto\.cloud\//.test(r.link)) {
+        const a = document.createElement('a');
+        a.className = 'cc-link';
+        a.href = r.link;
+        a.target = '_blank';
+        a.rel = 'noopener';
+        a.textContent = r.titolo;
+        tdT.append(a);
+      } else tdT.textContent = r.titolo;
+      ccCell(tr, r.condominio || '', r.condominio ? '' : 'cc-muted');
+      const tdP = ccCell(tr, '');
+      const pill = document.createElement('span');
+      pill.className = 'badge ' + (r.priorita === 'urgente' ? 'b-hot' : 'b-soft');
+      pill.textContent = r.priorita;
+      tdP.append(pill);
+      ccBadge(tr, r.stato, r.stato === 'da assegnare' ? 'b-ink' : r.stato === 'fatta' ? 'b-ok' : 'b-soft');
+      ccCell(tr, r.affidataA || '', 'cc-hide-sm ' + (r.affidataA ? '' : 'cc-muted'));
+      const prev = r.dataPrevista ? String(r.dataPrevista).slice(0, 10) : '';
+      ccCell(tr, prev ? ccDate(prev) : '', 'nowrap mono cc-hide-sm ' + (!chiusa && prev && prev < oggi ? 'is-bad' : ''));
+      return tr;
+    }));
+  });
+
+  dash.draw('ticket', (tbody) => {
+    const d = dash.data('ticket');
+    if (d.status === 'error') return ccFailRow(tbody, 6);
+    if (d.status !== 'ok') { tbody.replaceChildren(); return; }
+    if (!d.data.length) return ccMsg(tbody, 6, 'Nessun ticket nell’elenco di BasLab');
+    tbody.replaceChildren(...d.data.map((r) => {
+      const tr = document.createElement('tr');
+      tr.dataset.key = String(ccPick(r, ['id', 'ticketId']) || '');
+      ccCell(tr, ccDate(ccPick(r, ['dataApertura', 'dataCreazione', 'data', 'dataInserimento', 'creato'])), 'nowrap mono');
+      ccCell(tr, ccPick(r, ['oggetto', 'titolo', 'descrizione', 'nome']) || '');
+      ccCell(tr, String(ccPick(r, ['immobile', 'condominio', 'anagrafica']) || '').trim());
+      ccCell(tr, ccPick(r, ['prioritaDescrizione', 'priorita', 'prioritaTicket']) || '', 'cc-muted');
+      ccBadge(tr, ccPick(r, ['statoDescrizione', 'stato', 'statoWorkflow']) ?? '', 'b-soft');
+      ccCell(tr, ccPick(r, ['fornitore', 'azienda', 'operatore']) || '', 'cc-hide-sm cc-muted');
+      return tr;
+    }));
+  });
+
+  const ccFilterRate = () => {
+    const q = (document.querySelector('.cc-search')?.value || '').trim().toLowerCase();
+    document.querySelectorAll('.cc-rate tr').forEach((tr) => { tr.hidden = !!q && !tr.textContent.toLowerCase().includes(q); });
+  };
+  document.querySelectorAll('.cc-search').forEach((input) => input.addEventListener('input', ccFilterRate));
+
+  dash.draw('rate_scadute', (tbody) => {
+    const d = dash.data('rate_scadute');
+    if (d.status === 'error') return ccFailRow(tbody, 6);
+    if (d.status !== 'ok') { tbody.replaceChildren(); return; }
+    if (!d.data.length) return ccMsg(tbody, 6, 'Nessuna rata scaduta con residuo');
+    tbody.replaceChildren(...d.data.map((r) => {
+      const tr = document.createElement('tr');
+      tr.dataset.key = encodeURIComponent(r.KEY);
+      ccCell(tr, ccDate(r.SCADENZA), 'nowrap mono');
+      ccCell(tr, r.CONDOMINIO);
+      ccCell(tr, r.GESTIONE, 'cc-muted');
+      ccCell(tr, ccEur(r.IMPORTO), 'num nowrap cc-hide-sm');
+      ccCell(tr, ccEur(r.INCASSATO), 'num nowrap cc-hide-sm');
+      ccCell(tr, ccEur(r.RESIDUO), 'num nowrap is-bad');
+      return tr;
+    }));
+    ccFilterRate();
+  });
+
+  dash.draw('solleciti', (tbody) => {
+    const d = dash.data('solleciti');
+    if (d.status === 'error') return ccFailRow(tbody, 6);
+    if (d.status !== 'ok') { tbody.replaceChildren(); return; }
+    if (!d.data.length) return ccMsg(tbody, 6, 'Nessun sollecito in BasLab');
+    tbody.replaceChildren(...d.data.map((r) => {
+      const tr = document.createElement('tr');
+      tr.dataset.key = String(r.id);
+      ccCell(tr, ccDate(r.dataGenerazione), 'nowrap mono');
+      ccCell(tr, String(r.immobile || '').trim());
+      ccCell(tr, r.nominativo || '');
+      ccCell(tr, r.configurazioneSollecitoRate || '', 'cc-hide-sm cc-muted');
+      ccCell(tr, ccEur(r.totaleSollecitato), 'num nowrap');
+      if (r.dataUltimoInvio) ccBadge(tr, ccDate(r.dataUltimoInvio), 'b-ok'); else ccBadge(tr, 'Da inviare', 'b-ink');
+      return tr;
+    }));
+  });
+
+  dash.draw('assemblee', (tbody) => {
+    const d = dash.data('assemblee');
+    if (d.status === 'error') return ccFailRow(tbody, 4);
+    if (d.status !== 'ok') { tbody.replaceChildren(); return; }
+    if (!d.data.length) return ccMsg(tbody, 4, 'Nessuna assemblea in BasLab');
+    const oggi = ccToday();
+    tbody.replaceChildren(...d.data.map((r) => {
+      const tr = document.createElement('tr');
+      tr.dataset.key = String(r.id);
+      const giorno = ccDay(r.dataSeconda);
+      ccCell(tr, ccDate(giorno), 'nowrap mono');
+      ccCell(tr, String(r.anagrafica || '').trim());
+      ccCell(tr, r.bilancio || '', 'cc-hide-sm cc-muted');
+      const stato = r.statoVerbale ? 'Verbale' : giorno >= oggi ? 'Convocata' : 'Senza verbale';
+      ccBadge(tr, stato, stato === 'Convocata' ? 'b-ink' : stato === 'Verbale' ? 'b-ok' : 'b-soft');
+      return tr;
+    }));
+  });
+
+  dash.draw('polizze', (tbody) => {
+    const d = dash.data('polizze');
+    if (d.status === 'error') return ccFailRow(tbody, 5);
+    if (d.status !== 'ok') { tbody.replaceChildren(); return; }
+    if (!d.data.length) return ccMsg(tbody, 5, 'Nessuna polizza registrata in BasLab');
+    const oggi = ccToday();
+    const rows = d.data.map((r) => {
+      const sc = ccDay(ccPick(r, ['scadenzaPremio', 'dataScadenzaPremio', 'scadenza', 'dataScadenza', 'dataFine']));
+      return { r, sc, g: sc ? ccDiff(sc, oggi) : null };
+    }).sort((a, b) => (a.sc || '9999') < (b.sc || '9999') ? -1 : 1);
+    tbody.replaceChildren(...rows.map(({ r, sc, g }) => {
+      const tr = document.createElement('tr');
+      tr.dataset.key = String(r.id);
+      ccCell(tr, String(ccPick(r, ['immobile', 'condominio', 'anagrafica']) || '').trim());
+      ccCell(tr, ccPick(r, ['numeroPolizza', 'numero', 'polizza', 'descrizione']) || '', 'mono');
+      ccCell(tr, ccPick(r, ['compagnia', 'agenzia', 'fornitore', 'azienda']) || '', 'cc-hide-sm cc-muted');
+      ccCell(tr, sc ? ccDate(sc) : '', 'nowrap mono');
+      ccCell(tr, g == null ? '' : ccNum(g), 'num ' + (g == null ? '' : g < 0 ? 'is-bad' : g <= 60 ? 'is-warn' : ''));
+      return tr;
+    }));
+  });
+
+  dash.draw('chiamate', (tbody) => {
+    const d = dash.data('chiamate');
+    const s = dash.data('chiamate_stato');
+    if (d.status === 'error') return ccFailRow(tbody, 5);
+    if (d.status !== 'ok') { tbody.replaceChildren(); return; }
+    if (!d.data.length) return ccMsg(tbody, 5, 'Nessuna chiamata recente');
+    const stato = new Map((s.status === 'ok' ? s.data : []).map((x) => [x.id, x.stato]));
+    tbody.replaceChildren(...d.data.map((r) => {
+      const tr = document.createElement('tr');
+      tr.dataset.key = String(r.id);
+      ccCell(tr, r.quando, 'nowrap mono');
+      ccCell(tr, r.chi);
+      ccCell(tr, r.condominio || '', 'cc-hide-sm ' + (r.condominio ? '' : 'cc-muted'));
+      ccCell(tr, r.cosa || '', r.urgente ? 'is-bad' : '');
+      const st = stato.get(r.id) || '';
+      if (st) ccBadge(tr, st, st === 'Da gestire' ? 'b-ink' : 'b-ok'); else ccCell(tr, '');
+      return tr;
+    }));
+  });
+
+  dash.draw('rate-cond', (el) => {
+    const d = dash.data('rate_condominio');
+    el.replaceChildren();
+    el.classList.toggle('dash-skeleton', d.status === 'loading');
+    if (d.status === 'error') {
+      const f = document.createElement('div');
+      f.className = 'cc-fail';
+      f.textContent = 'Caricamento non riuscito';
+      el.append(f);
+      return;
+    }
+    if (d.status !== 'ok' || !d.data.length) return;
+    const rows = d.data;
+    const W = Math.max(260, el.clientWidth || 320);
+    const rowH = 36;
+    const H = rows.length * rowH + 4;
+    const svg = d3.select(el).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('role', 'img').attr('aria-label', 'Residuo delle rate scadute per condominio');
+    const measure = svg.append('text').attr('font-size', 12).style('font-family', 'var(--al-sans)');
+    const textW = (t) => { measure.text(t); return measure.node().getComputedTextLength(); };
+    const end = (r) => ccEur(r.RESIDUO, true);
+    const lw = Math.min(Math.ceil(d3.max(rows, (r) => textW(r.CONDOMINIO || ''))) + 12, W * 0.45);
+    const ew = Math.ceil(d3.max(rows, (r) => textW(end(r)))) + 8;
+    measure.remove();
+    const maxV = d3.max(rows, (r) => r.RESIDUO) || 1;
+    const x = d3.scaleLinear([0, maxV], [lw, Math.max(lw + 40, W - ew)]);
+    const tip = document.createElement('div');
+    tip.className = 'cc-tip';
+    tip.hidden = true;
+    el.append(tip);
+    const g = svg.selectAll('g.row').data(rows).join('g').attr('class', 'row').attr('transform', (r, i) => `translate(0, ${i * rowH})`);
+    g.append('text').attr('x', 0).attr('y', rowH / 2).attr('dy', '0.35em').attr('font-size', 12).style('font-family', 'var(--al-sans)').style('fill', '#141413').text((r) => r.CONDOMINIO.replace(/^(SUPER)?CONDOMINIO\s+/i, ''));
+    g.append('rect').attr('x', lw).attr('y', 9).attr('height', rowH - 18).attr('rx', 4).attr('width', (r) => Math.max(0, x(r.RESIDUO) - lw)).style('fill', '#141413');
+    g.append('text').attr('x', (r) => x(r.RESIDUO) + 6).attr('y', rowH / 2).attr('dy', '0.35em').attr('font-size', 12).style('font-family', 'var(--al-sans)').style('fill', '#6E6962').text(end);
+    g.append('rect').attr('x', 0).attr('y', 0).attr('width', W).attr('height', rowH).style('fill', 'transparent')
+      .on('mousemove', (event, r) => {
+        tip.hidden = false;
+        tip.replaceChildren();
+        const h = document.createElement('div');
+        h.className = 'cc-tip-h';
+        h.textContent = r.CONDOMINIO;
+        tip.append(h, ...[`Residuo scaduto ${ccEur(r.RESIDUO)}`, `Emesso ${ccEur(r.IMPORTO)}`, `Incassato ${ccEur(r.INCASSATO)}`, `${r.SCADENZE} scadenze con residuo`].map((line) => { const b = document.createElement('div'); b.textContent = line; return b; }));
+        const [mx, my] = d3.pointer(event, el);
+        tip.style.left = Math.min(Math.max(0, mx + 12), el.clientWidth - tip.offsetWidth) + 'px';
+        tip.style.top = (my + 12) + 'px';
+      })
+      .on('mouseleave', () => { tip.hidden = true; });
+  });
+</script>

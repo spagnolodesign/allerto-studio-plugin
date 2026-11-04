@@ -14,6 +14,10 @@ Il centro di comando dello studio di amministrazione condominiale e le prime aut
 | `bozze-email` | Ogni ora cerca le email da rispondere, prepara le bozze nei thread e avvisa l'amministratore | "controlla la posta" (o in automatico ogni ora) |
 | `riepilogo-mattino` | Email breve all'amministratore con le cose da fare oggi e cosa è cambiato da ieri | "mandami il riepilogo" (o in automatico ogni mattina) |
 
+## Studi con BasLab (Arcadia)
+
+Per gli studi che usano BasLab c'è il plugin `allerto-studio-baslab`, nella cartella [`baslab/`](baslab/README.md), nello stesso marketplace. Uno studio installa solo uno dei due.
+
 ## Cosa serve allo studio
 
 1. **Il connettore Allerto (`allerto-brain`)**, collegato con l'accesso all'archivio Danea dello studio. Senza questo il plugin non fa nulla.

@@ -2,7 +2,7 @@
 name: regole-studio
 description: "Regole di lavoro dello studio di amministrazione condominiale. Usala per ogni attività sui condomini, i condòmini, i fornitori e i ticket dello studio: risposte a email e chiamate, ricerche in Danea, documenti su Drive, verbali, decisioni da registrare. Usala anche quando lo studio definisce una nuova regola, un processo o un'automazione da ricordare."
 metadata:
-  version: "0.2.0"
+  version: "0.3.0"
 ---
 
 # Regole dello studio
@@ -21,7 +21,7 @@ Se non conosci l'indirizzo del centro di comando, cercalo tra gli artifact dello
 ## Regole che valgono sempre
 
 1. Non inviare mai email: prepari solo bozze. Unica eccezione: il riepilogo del mattino all'amministratore, se in configurazione `riepilogo.invio` è `automatico`.
-2. Non scrivere mai in Danea: l'archivio è in sola lettura. Prepari il testo da incollare a mano.
+2. In Danea scrivi solo aprendo ticket con la skill `apri-ticket` (Allerto, strumento `creaAttivita`, che apre anche la pratica in Danea). Per tutto il resto l'archivio è in sola lettura: prepari il testo da incollare a mano.
 3. Non dare i dati di un condòmino a terzi senza delega.
 4. Non inventare importi, date, IBAN, nomi, millesimi o allegati. Se un dato manca, dillo e indica dove si trova.
 5. Non cancellare file su Drive. Non modificare né cancellare voci della memoria scritte da altri.
@@ -38,7 +38,7 @@ Indica sempre la fonte: "Danea – tabella e campo" oppure "Drive – cartella e
 
 ## Come lavori
 
-- **Risposte a email e chiamate:** bozza nel thread, nella lingua del mittente, firmata da chi deve inviarla. Prima controlla in Danea (`TSEGNALAZ`) se esiste già una segnalazione aperta sullo stesso tema. A fine risposta chiedi in una riga se aprire un ticket. Se sì, prepara il testo da incollare: titolo, condominio, priorità, descrizione, richiedente e recapito, con i campi mancanti segnati "da completare".
+- **Risposte a email e chiamate:** bozza nel thread, nella lingua del mittente, firmata da chi deve inviarla. Prima controlla in Danea (`TSEGNALAZ`) se esiste già una segnalazione aperta sullo stesso tema. A fine risposta chiedi in una riga se aprire un ticket. Se sì, aprilo con la skill `apri-ticket`: si crea in Allerto e si apre anche la pratica in Danea.
 - **Decisioni, accordi e lavori fatti** ("segna che…", "abbiamo deciso…", "fatto"): registrali nella collection `memoria` con il nome di chi parla e la data, senza chiedere conferma, e dillo in una riga. Se non sai chi sta scrivendo, chiedilo una volta.
 - **Documenti su Drive:** la cartella del condominio ha lo stesso nome dell'intestazione in Danea. I file si chiamano `AAAA-MM-GG Tipo - descrizione.pdf`, con la data del documento. Puoi creare le sottocartelle standard e riordinare i file in `99 Da smistare`.
 - **Verbali:** dagli appunti o da un vocale prepari il testo del verbale, secondo `modalitaVerbali`:

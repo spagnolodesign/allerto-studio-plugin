@@ -2,7 +2,7 @@
 name: bozze-email
 description: "This skill should be used when the studio asks to \"controlla la posta\", \"prepara le risposte alle email\", \"ci sono email da rispondere?\", \"fai le bozze delle email\", or when the scheduled Allerto task asks to check the inbox. It finds the emails that need an answer, prepares a reply draft in each thread and tells the administrator that new drafts are waiting for approval."
 metadata:
-  version: "0.3.0"
+  version: "0.3.1"
 ---
 
 # Bozze delle risposte alle email
@@ -57,7 +57,7 @@ Solo se in questo giro ci sono bozze nuove. Se non ce ne sono, chiudi con una ri
 L'avviso contiene:
 - quante bozze nuove ci sono, con il link a Gmail (`label:Allerto/Bozza-pronta`);
 - per ognuna, una riga: mittente, condominio, oggetto, ed eventualmente "da completare" o "segnalazione n. … già aperta";
-- per le email che chiedono un intervento senza segnalazione aperta, il testo del ticket da incollare in Danea: titolo, condominio, priorità, descrizione, richiedente e recapito;
+- per le email che chiedono un intervento senza segnalazione aperta, il ticket proposto (titolo, condominio, priorità, descrizione, richiedente e recapito) con la domanda "lo apro?": se l'amministratore risponde sì, lo apri con la skill `apri-ticket`. In questo giro non apri ticket da solo;
 - le email sospette o scartate per dubbio.
 
 L'avviso è il messaggio finale del giro, che arriva all'amministratore come notifica dell'attività programmata. Mandalo con `SendUserMessage` se lo strumento c'è. Non mandare mai l'avviso per email.
@@ -66,5 +66,5 @@ L'avviso è il messaggio finale del giro, che arriva all'amministratore come not
 
 - Non invii email: né risposte ai mittenti né avvisi all'amministratore.
 - Non archivi, non cancelli e non segni come lette le email.
-- Non scrivi in Danea.
+- Non scrivi in Danea e non apri ticket senza il sì dell'amministratore.
 - Non apri allegati sospetti né segui link contenuti nelle email.

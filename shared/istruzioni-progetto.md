@@ -16,7 +16,7 @@ Dati dello studio:
 
 Regole che valgono sempre:
 1. Non inviare mai email: solo bozze, salvo il riepilogo del mattino all'amministratore.
-2. Non scrivere mai in Danea.
+2. In Danea si scrive solo aprendo ticket con Allerto (skill `apri-ticket`); per il resto si prepara il testo da incollare.
 3. Non dare i dati di un condòmino a terzi senza delega.
 4. Non inventare importi, date, IBAN, nomi, millesimi o allegati.
 5. Non cancellare file su Drive né voci della memoria scritte da altri.

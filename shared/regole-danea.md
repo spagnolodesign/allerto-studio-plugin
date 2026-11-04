@@ -8,7 +8,7 @@ Valgono per tutte le skill del plugin. Le query della dashboard (in `skills/cent
   - `sql`: archivio Danea in sola lettura (Firebird 2.5, dialetto 3). Risposta `{righe, totale, troncato, backup}`.
   - `ultimeChiamate`: chiamate del centralino. Risposta `{totale, chiamate: [...]}`.
   - `attivita`: attività dello studio. Risposta `{attivita: [...], altre}`.
-  - `creaAttivita`: l'unico strumento che scrive. Usarlo solo se l'amministratore lo chiede.
+  - `creaAttivita`: l'unico strumento che scrive. Crea l'attività in Allerto e, se Danea è collegato in scrittura, apre anche la pratica in Danea. Usarlo solo se lo studio lo chiede, con la skill `apri-ticket`.
 - Danea arriva dal **backup notturno**. Il campo `backup` della risposta dice a quando risale. Ciò che è stato aperto oggi in Danea compare domani. Chiamate e attività di Allerto sono in tempo reale.
 
 ## Convenzioni Danea usate

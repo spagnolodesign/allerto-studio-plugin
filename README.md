@@ -10,6 +10,7 @@ Il centro di comando dello studio di amministrazione condominiale e le prime aut
 | `configura-studio` | Prima installazione: raccoglie i dati dello studio, crea il centro di comando, salva la configurazione e programma il riepilogo del mattino | "configura lo studio" |
 | `centro-di-comando` | Crea o aggiorna la dashboard live con il design Allerto: attività, interventi, segnalazioni, morosità, assemblee, polizze, chiamate | "aggiorna il centro di comando" |
 | `regole-studio` | Le regole di lavoro dello studio: fonti, bozze, ticket, memoria condivisa, verbali, forma delle risposte | si attiva da sola |
+| `apri-ticket` | Apre un ticket in Allerto e, tramite il collegamento di Allerto, la pratica in Danea, senza doppioni | "apri un ticket", o sì alla domanda dopo una risposta |
 | `bozze-email` | Ogni ora cerca le email da rispondere, prepara le bozze nei thread e avvisa l'amministratore | "controlla la posta" (o in automatico ogni ora) |
 | `riepilogo-mattino` | Email breve all'amministratore con le cose da fare oggi e cosa è cambiato da ieri | "mandami il riepilogo" (o in automatico ogni mattina) |
 

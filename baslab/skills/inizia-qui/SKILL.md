@@ -2,7 +2,7 @@
 name: inizia-qui
 description: "This skill should be used in the studio's first chat after Allerto Studio · BasLab is installed and the connectors are linked, or whenever the studio says \"inizia qui\", \"iniziamo\", \"cosa sai fare?\", \"come funzioni?\", \"fammi vedere cosa fai\", \"spiegami Allerto\", \"fammi la lezione\", \"riprendiamo la lezione\", \"onboarding\". It runs a guided, conversational lesson for the administrator: one topic at a time, each with a live demo on the studio's own data and a small exercise, saving progress so it can resume in another chat."
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Inizia qui: la lezione guidata per l'amministratore
@@ -57,9 +57,8 @@ In ordine. I dettagli, la dimostrazione e l'esercizio di ciascuna sono in `refer
 | 4 | `email` | Le bozze di risposta e il controllo orario della posta | posta |
 | 5 | `ticket` | Dalla risposta al ticket, senza doppioni | Allerto + BasLab |
 | 6 | `centro-di-comando` | La dashboard dello studio e la memoria condivisa | centro di comando |
-| 7 | `riepilogo` | Il riepilogo del mattino e le attività programmate | posta (facoltativa) |
-| 8 | `documenti` | L'archivio su Drive, i nomi dei file, i verbali | Drive |
-| 9 | `scadenze` | Agenda, assemblee e scadenze | Calendar (facoltativo) |
+| 7 | `documenti` | L'archivio su Drive, i nomi dei file, i verbali | Drive |
+| 8 | `scadenze` | Agenda, assemblee e scadenze | Calendar (facoltativo) |
 
 Lezione rapida = 2, 4, 6. Se una lezione richiede un collegamento che manca, spiegala in due frasi senza dimostrazione e segnala che si potrà provare dopo averlo collegato (proponi il connettore con SearchMcpRegistry e SuggestConnectors solo se l'amministratore vuole farlo subito).
 

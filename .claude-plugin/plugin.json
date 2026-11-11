@@ -1,8 +1,8 @@
 {
   "name": "allerto-studio",
   "displayName": "allerto. Studio",
-  "version": "0.5.0",
-  "description": "Il centro di comando dello studio di amministrazione condominiale e le automazioni di Allerto: dashboard live su Danea e centralino, riepilogo del mattino via email, configurazione per studio.",
+  "version": "0.6.0",
+  "description": "Il centro di comando dello studio di amministrazione condominiale e le automazioni di Allerto: dashboard live su Danea e centralino, configurazione per studio.",
   "author": {
     "name": "Allerto"
   },

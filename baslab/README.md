@@ -9,18 +9,17 @@ Il centro di comando dello studio di amministrazione condominiale e le prime aut
 | Skill | Cosa fa | Come si chiede |
 |---|---|---|
 | `inizia-qui` | La prima chat dopo l'installazione: una lezione guidata per l'amministratore, un argomento alla volta, con prove sui dati di BasLab. Salva i progressi e si riprende in un'altra chat | si attiva alla prima chat, oppure "inizia qui", "riprendiamo la lezione" |
-| `configura-studio` | Prima installazione: raccoglie i dati dello studio (anche da BasLab), crea il centro di comando, salva la configurazione e programma il riepilogo del mattino | "configura lo studio" |
+| `configura-studio` | Prima installazione: raccoglie i dati dello studio (anche da BasLab), crea il centro di comando, salva la configurazione e programma il controllo orario della posta | "configura lo studio" |
 | `centro-di-comando` | Crea o aggiorna la dashboard live: attività, ticket BasLab, rate scadute non incassate, solleciti, assemblee, polizze, chiamate | "aggiorna il centro di comando" |
 | `regole-studio` | Le regole di lavoro dello studio: fonti BasLab, bozze, ticket, memoria condivisa, verbali, forma delle risposte | si attiva da sola |
 | `apri-ticket` | Controlla i doppioni in BasLab e in Allerto, apre l'attività in Allerto e prepara il testo del ticket da inserire in BasLab | "apri un ticket", o sì alla domanda dopo una risposta |
 | `bozze-email` | Ogni ora cerca le email da rispondere, prepara le bozze nei thread e avvisa l'amministratore | "controlla la posta" (o in automatico ogni ora) |
-| `riepilogo-mattino` | Email breve all'amministratore con le cose da fare oggi e cosa è cambiato da ieri | "mandami il riepilogo" (o in automatico ogni mattina) |
 
 ## Cosa serve allo studio
 
 1. **Il connettore Allerto collegato a BasLab** (quello che offre `elenca_condomini`, `morosi`, `interroga_gestionale`…). Senza questo il plugin non fa nulla.
-2. **La posta** (Gmail o Outlook) collegata a Claude, per bozze e riepilogo. Senza posta il riepilogo arriva come messaggio in Claude.
-3. Le **attività programmate** abilitate sull'account, per il riepilogo automatico.
+2. **La posta** (Gmail o Outlook) collegata a Claude, per le bozze delle risposte. Senza posta le bozze restano spente.
+3. Le **attività programmate** abilitate sull'account, per il controllo orario della posta.
 
 ## Installazione in uno studio
 
@@ -28,7 +27,7 @@ Il centro di comando dello studio di amministrazione condominiale e le prime aut
    - **claude.ai (Team o Enterprise)**: l'Owner aggiunge il repository `spagnolodesign/allerto-studio-plugin` come marketplace in *Impostazioni organizzazione > Plugins & skills* e rende disponibile `allerto-studio-baslab`.
    - **Claude Code**: `/plugin install allerto-studio-baslab --marketplace spagnolodesign/allerto-studio-plugin`.
 2. Chiedi a Claude: "configura lo studio".
-3. Rispondi alle domande: nome dello studio, email dell'amministratore, firma, orario del riepilogo.
+3. Rispondi alle domande: nome dello studio, email dell'amministratore, firma, bozze delle email.
 4. Nella prima chat dello studio, Claude propone la lezione guidata (`inizia-qui`).
 
 ## Il centro di comando

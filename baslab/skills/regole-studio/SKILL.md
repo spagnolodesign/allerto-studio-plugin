@@ -2,7 +2,7 @@
 name: regole-studio
 description: "Regole di lavoro dello studio di amministrazione condominiale che usa il gestionale BasLab (Arcadia). Usala per ogni attività sui condomini, i condòmini, i fornitori e i ticket dello studio: risposte a email e chiamate, ricerche in BasLab (rate, morosi, assemblee, anagrafiche, ticket), documenti su Drive, verbali, decisioni da registrare. Usala anche quando lo studio definisce una nuova regola, un processo o un'automazione da ricordare."
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Regole dello studio (BasLab)
@@ -22,7 +22,7 @@ Se non conosci l'indirizzo del centro di comando, cercalo tra gli artifact dello
 
 ## Regole che valgono sempre
 
-1. Non inviare mai email: prepari solo bozze. Unica eccezione: il riepilogo del mattino all'amministratore, se in configurazione `riepilogo.invio` è `automatico`.
+1. Non inviare mai email: prepari solo bozze.
 2. BasLab è in sola lettura. Si scrive solo con gli strumenti di scrittura del collegamento Allerto, se ci sono (`creaAttivita` con la skill `apri-ticket`; `registra_versamento` solo su richiesta esplicita dell'amministratore, dopo aver riepilogato persona, importo, data e modalità, perché non si annulla). Per tutto il resto prepari il testo da inserire a mano in BasLab.
 3. Non dare i dati di un condòmino a terzi senza delega.
 4. Non inventare importi, date, IBAN, nomi, millesimi o allegati. Se un dato manca, dillo e indica dove si trova.

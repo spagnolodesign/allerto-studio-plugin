@@ -106,24 +106,7 @@ Dopo il risultato, fai notare la riga della fonte e l'esercizio mostrato. Se c'�
 
 ---
 
-## 7. `riepilogo` · Il riepilogo del mattino
-
-**Spiega**: ogni mattina feriale, all'orario scelto, Claude manda all'amministratore un'email breve con le cinque cose da fare oggi e cosa è cambiato da ieri, più il link al centro di comando. È un'attività programmata: parte da sola, anche quando nessuno apre Claude.
-
-**Mostra**: leggi l'impostazione in `config.riepilogo` (orario, giorni, invio) e, con `list_triggers`, se l'attività "Allerto · riepilogo del mattino" esiste ed è attiva.
-
-**Proponi**: "Vuole vedere quello di domani in anteprima?" Solo con un sì, esegui la skill `riepilogo-mattino` in modalità bozza.
-
-**Frasi da insegnare**
-- "Mandami il riepilogo."
-- "Sposta il riepilogo alle 8."
-- "Cosa c'è da fare oggi in studio?"
-
-**Tocca a te**: "Le va bene l'orario attuale?" Se vuole cambiarlo, segui la skill `configura-studio` per la sola modifica dell'orario.
-
----
-
-## 8. `documenti` · L'archivio su Drive e i verbali
+## 7. `documenti` · L'archivio su Drive e i verbali
 
 **Spiega**
 - Ogni condominio ha la sua cartella su Drive, con lo stesso nome del condominio in BasLab, e le sottocartelle standard (01 Assemblee, 02 Bilanci e rendiconti, …, 99 Da smistare).
@@ -141,9 +124,9 @@ Dopo il risultato, fai notare la riga della fonte e l'esercizio mostrato. Se c'�
 
 ---
 
-## 9. `scadenze` · Agenda, assemblee e scadenze
+## 8. `scadenze` · Agenda, assemblee e scadenze
 
-**Spiega**: Claude incrocia le scadenze di BasLab (rate in arrivo, esercizi in chiusura, assemblee convocate, polizze) con l'agenda dello studio, e le porta nel centro di comando e nel riepilogo. Gli eventi in calendario si creano solo con conferma.
+**Spiega**: Claude incrocia le scadenze di BasLab (rate in arrivo, esercizi in chiusura, assemblee convocate, polizze) con l'agenda dello studio, e le porta nel centro di comando. Gli eventi in calendario si creano solo con conferma.
 
 **Mostra**: le scadenze dei prossimi 30 giorni da BasLab (rate da `EmissioneRata/scadenze/dx/list`, assemblee convocate da `Assemblea/dx/list`) e, se Calendar è collegato, gli impegni di oggi. Ricorda di portare le date al fuso di Roma.
 
@@ -165,7 +148,6 @@ Dopo il risultato, fai notare la riga della fonte e l'esercizio mostrato. Se c'�
 | La posta | "Controlla la posta." |
 | I ticket | "Apri un ticket per questo guasto." |
 | La memoria | "Segna che abbiamo deciso…" |
-| Il riepilogo | "Mandami il riepilogo." |
 | I documenti | "Trova il regolamento del condominio …" |
 | Le scadenze | "Quali assemblee ho nei prossimi due mesi?" |
 | Ripassare | "Riprendiamo la lezione." |

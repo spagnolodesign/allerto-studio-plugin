@@ -1,8 +1,8 @@
 ---
 name: configura-studio
-description: "This skill should be used when a condominium-administration studio that uses BasLab (Arcadia) installs Allerto Studio · BasLab for the first time, or asks to \"configura lo studio\", \"configura Allerto\", \"imposta il riepilogo del mattino\", \"cambia l'orario del riepilogo\", \"cambia la firma dello studio\", \"attiva le automazioni di Allerto\". It collects the studio's settings, creates the command center, saves the configuration and schedules the morning summary.\n"
+description: "This skill should be used when a condominium-administration studio that uses BasLab (Arcadia) installs Allerto Studio · BasLab for the first time, or asks to \"configura lo studio\", \"configura Allerto\", \"cambia la firma dello studio\", \"attiva le automazioni di Allerto\". It collects the studio's settings, creates the command center, saves the configuration and schedules the hourly email-draft check.\n"
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Configura lo studio (BasLab)
@@ -10,7 +10,9 @@ metadata:
 Prima installazione, o modifica delle impostazioni, di Allerto Studio per uno studio che usa il gestionale BasLab (Arcadia). Alla fine lo studio ha tre cose:
 - il centro di comando;
 - la configurazione salvata;
-- il riepilogo del mattino programmato.
+- il controllo orario della posta, se lo studio lo vuole.
+
+Il plugin non manda email: niente riepilogo del mattino, solo bozze.
 
 I campi della configurazione e dove vive sono descritti in `${CLAUDE_PLUGIN_ROOT}/shared/configurazione.md`. Leggilo prima di cominciare.
 
@@ -23,7 +25,7 @@ I campi della configurazione e dove vive sono descritti in `${CLAUDE_PLUGIN_ROOT
   - Annota anche quali strumenti di scrittura ci sono (`creaAttivita`, `registra_versamento`): cambiano cosa può fare la skill `apri-ticket`.
 - **Posta**: cerca uno strumento per mandare email o creare bozze, per esempio Gmail o Outlook. Usa ToolSearch con "gmail send draft" e poi "outlook mail send".
   - Se non c'è, cerca il connettore con SearchMcpRegistry (`["gmail", "outlook", "email"]`) e proponilo con SuggestConnectors.
-  - Se lo studio non vuole collegare la posta, continua: il riepilogo arriverà come messaggio in Claude invece che per email.
+  - Se lo studio non vuole collegare la posta, continua: le bozze delle email restano spente.
 
 ### 2. Impostazioni
 
@@ -33,10 +35,8 @@ Per i dati dello studio guarda anche in BasLab: con `descrivi_gestionale` e `int
 
 Chiedi con AskUserQuestion, al massimo quattro domande per volta, solo ciò che manca:
 - nome dello studio e nome dell'amministratore;
-- email a cui mandare il riepilogo;
+- email dell'amministratore (serve alle bozze per riconoscere i messaggi dello studio);
 - firma delle email (nome, indirizzo, telefono);
-- orario e giorni del riepilogo (default: 7:45, dal lunedì al venerdì);
-- invio del riepilogo automatico o in bozza (default: automatico, perché è un'email interna);
 - modalità dei verbali: A solo verbale in BasLab, B solo PDF su Drive, C entrambi;
 - bozze delle email: attive o no, fascia oraria (default 8-19, dal lunedì al venerdì). L'avviso arriva sempre come notifica.
 
@@ -54,21 +54,11 @@ Scrivi `allerto/config` nel database del centro di comando con `ArtifactData`:
 
 Includi tutti i campi raccolti, più `gestionale: "BasLab"`, `connettore`, `centroDiComando`, `versionePlugin` e `aggiornato`.
 
-### 5. Programma il riepilogo del mattino
+### 5. Togli il vecchio riepilogo del mattino
 
-- Cerca gli strumenti delle attività programmate con ToolSearch (`create_trigger`, `list_triggers`, `update_trigger`).
-- Con `list_triggers` controlla se esiste già un'attività "Allerto · riepilogo del mattino". Se c'è, aggiornala invece di crearne un'altra.
-- Crea l'attività programmata:
-  - `name`: "Allerto · riepilogo del mattino";
-  - `cron_expression`: nel fuso dello studio, per esempio `CRON_TZ=Europe/Rome 44 7 * * 1-5` per "7:45 dal lunedì al venerdì". Rispetta le indicazioni dello strumento sui minuti da evitare.
-  - `prompt`: un'istruzione completa e autonoma, perché ogni esecuzione parte da zero:
-    > Usa la skill riepilogo-mattino del plugin Allerto Studio · BasLab. Centro di comando: <indirizzo>. Leggi la configurazione da lì (collection allerto, documento config) e manda il riepilogo di oggi all'amministratore come indicato.
-  - `initiation`: `human_request`;
-  - `requires_local_device`: non impostarlo, perché gira tutto nel cloud.
-- Riferisci in una frase se le esecuzioni partono da sole o chiedono approvazione, come indicato nella risposta dello strumento.
-- Se non esiste uno strumento per le attività programmate, dillo: il riepilogo si potrà chiedere a mano con "riepilogo del mattino".
+Le versioni precedenti del plugin programmavano un'attività "Allerto · riepilogo del mattino". Con `list_triggers` controlla se esiste ancora: se c'è, dillo e proponi di eliminarla. Non eliminarla senza un sì. Se la configurazione contiene ancora il blocco `riepilogo`, toglilo quando la salvi.
 
-### 5bis. Programma le bozze delle email
+### 6. Programma le bozze delle email
 
 Se `bozzeEmail.attivo` è vero e la posta è collegata:
 - con `list_triggers` controlla se esiste già "Allerto · bozze email"; se c'è, aggiornala;
@@ -80,7 +70,7 @@ Se `bozzeEmail.attivo` è vero e la posta è collegata:
   - `initiation`: `human_request`.
 - Riferisci in una frase se le esecuzioni partono da sole o chiedono approvazione.
 
-### 6. Istruzioni del Progetto
+### 7. Istruzioni del Progetto
 
 Le regole di lavoro arrivano con la skill `regole-studio` e valgono in ogni chat. Se lo studio lavora in un Progetto di claude.ai:
 - crea il documento di progetto `claude/regole-archivio-documenti.md` se non esiste (strumento Projects, `project_write`), partendo dalle sezioni della skill `regole-studio`;
@@ -89,18 +79,12 @@ Le regole di lavoro arrivano con la skill `regole-studio` e valgono in ogni chat
 
 Se lo studio non usa un Progetto, salta questo passo.
 
-### 7. Prova
-
-Esegui subito la skill `riepilogo-mattino` una volta, in modalità bozza, così l'amministratore vede com'è fatta l'email. Riporta che la bozza è pronta e dove trovarla.
-
 ## Cosa dire alla fine
 
 Una riga per ciascuna cosa:
 - il centro di comando: creato o aggiornato;
 - la configurazione salvata, con i campi principali;
-- il riepilogo programmato, con orario, giorni e se parte da solo;
 - il controllo orario delle email, con fascia oraria;
-- le istruzioni del Progetto da incollare, se serve;
-- la bozza di prova.
+- le istruzioni del Progetto da incollare, se serve.
 
 Poi un solo passo successivo: se `allerto/onboarding` non è `completata`, proponi la lezione guidata della skill `inizia-qui` ("Vuole che le mostri come lavorare con me, un argomento alla volta?"); altrimenti un passo naturale, per esempio "Quando vi fidate, possiamo attivare anche i solleciti ai fornitori".

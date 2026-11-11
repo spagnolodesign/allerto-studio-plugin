@@ -1,8 +1,8 @@
 {
   "name": "allerto-studio-baslab",
   "displayName": "allerto. Studio · BasLab",
-  "version": "1.0.0",
-  "description": "Il centro di comando dello studio di amministrazione condominiale e le automazioni di Allerto per gli studi che usano BasLab (Arcadia): dashboard live su BasLab e centralino, riepilogo del mattino via email, bozze delle risposte, configurazione per studio.",
+  "version": "1.1.0",
+  "description": "Il centro di comando dello studio di amministrazione condominiale e le automazioni di Allerto per gli studi che usano BasLab (Arcadia): dashboard live su BasLab e centralino, bozze delle risposte, configurazione per studio.",
   "author": {
     "name": "Allerto"
   },

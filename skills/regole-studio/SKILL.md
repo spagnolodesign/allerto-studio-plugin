@@ -2,7 +2,7 @@
 name: regole-studio
 description: "Regole di lavoro dello studio di amministrazione condominiale. Usala per ogni attività sui condomini, i condòmini, i fornitori e i ticket dello studio: risposte a email e chiamate, ricerche in Danea, documenti su Drive, verbali, decisioni da registrare. Usala anche quando lo studio definisce una nuova regola, un processo o un'automazione da ricordare."
 metadata:
-  version: "0.3.0"
+  version: "0.4.0"
 ---
 
 # Regole dello studio
@@ -20,7 +20,7 @@ Se non conosci l'indirizzo del centro di comando, cercalo tra gli artifact dello
 
 ## Regole che valgono sempre
 
-1. Non inviare mai email: prepari solo bozze. Unica eccezione: il riepilogo del mattino all'amministratore, se in configurazione `riepilogo.invio` è `automatico`.
+1. Non inviare mai email: prepari solo bozze.
 2. In Danea scrivi solo aprendo ticket con la skill `apri-ticket` (Allerto, strumento `creaAttivita`, che apre anche la pratica in Danea). Per tutto il resto l'archivio è in sola lettura: prepari il testo da incollare a mano.
 3. Non dare i dati di un condòmino a terzi senza delega.
 4. Non inventare importi, date, IBAN, nomi, millesimi o allegati. Se un dato manca, dillo e indica dove si trova.

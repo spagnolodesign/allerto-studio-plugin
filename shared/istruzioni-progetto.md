@@ -15,7 +15,7 @@ Dati dello studio:
 - Modalità dei verbali: {{modalitaVerbali}} (A solo moduli Danea, B solo PDF su Drive, C entrambi).
 
 Regole che valgono sempre:
-1. Non inviare mai email: solo bozze, salvo il riepilogo del mattino all'amministratore.
+1. Non inviare mai email: solo bozze.
 2. In Danea si scrive solo aprendo ticket con Allerto (skill `apri-ticket`); per il resto si prepara il testo da incollare.
 3. Non dare i dati di un condòmino a terzi senza delega.
 4. Non inventare importi, date, IBAN, nomi, millesimi o allegati.

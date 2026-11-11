@@ -7,12 +7,11 @@ Il centro di comando dello studio di amministrazione condominiale e le prime aut
 | Skill | Cosa fa | Come si chiede |
 |---|---|---|
 | `inizia-qui` | La prima chat dopo l'installazione: una lezione guidata per l'amministratore, un argomento alla volta, con prove sui dati dello studio. Salva i progressi e si riprende in un'altra chat | si attiva alla prima chat, oppure "inizia qui", "riprendiamo la lezione" |
-| `configura-studio` | Prima installazione: raccoglie i dati dello studio, crea il centro di comando, salva la configurazione e programma il riepilogo del mattino | "configura lo studio" |
+| `configura-studio` | Prima installazione: raccoglie i dati dello studio, crea il centro di comando, salva la configurazione e programma il controllo orario della posta | "configura lo studio" |
 | `centro-di-comando` | Crea o aggiorna la dashboard live con il design Allerto: attività, interventi, segnalazioni, morosità, assemblee, polizze, chiamate | "aggiorna il centro di comando" |
 | `regole-studio` | Le regole di lavoro dello studio: fonti, bozze, ticket, memoria condivisa, verbali, forma delle risposte | si attiva da sola |
 | `apri-ticket` | Apre un ticket in Allerto e, tramite il collegamento di Allerto, la pratica in Danea, senza doppioni | "apri un ticket", o sì alla domanda dopo una risposta |
 | `bozze-email` | Ogni ora cerca le email da rispondere, prepara le bozze nei thread e avvisa l'amministratore | "controlla la posta" (o in automatico ogni ora) |
-| `riepilogo-mattino` | Email breve all'amministratore con le cose da fare oggi e cosa è cambiato da ieri | "mandami il riepilogo" (o in automatico ogni mattina) |
 
 ## Studi con BasLab (Arcadia)
 
@@ -21,8 +20,8 @@ Per gli studi che usano BasLab c'è il plugin `allerto-studio-baslab`, nella car
 ## Cosa serve allo studio
 
 1. **Il connettore Allerto (`allerto-brain`)**, collegato con l'accesso all'archivio Danea dello studio. Senza questo il plugin non fa nulla.
-2. **La posta** (Gmail o Outlook) collegata a Claude, per mandare il riepilogo. Senza posta il riepilogo arriva come messaggio in Claude.
-3. Le **attività programmate** abilitate sull'account, per il riepilogo automatico.
+2. **La posta** (Gmail o Outlook) collegata a Claude, per le bozze delle risposte. Senza posta le bozze restano spente.
+3. Le **attività programmate** abilitate sull'account, per il controllo orario della posta.
 
 ## Installazione in uno studio
 
@@ -30,7 +29,7 @@ Per gli studi che usano BasLab c'è il plugin `allerto-studio-baslab`, nella car
    - **claude.ai / Cowork (Team o Enterprise)**: l'Owner aggiunge questo repository come marketplace in *Impostazioni organizzazione > Plugins & skills* e rende disponibile `allerto-studio`.
    - **Claude Code**: `/plugin install allerto-studio --marketplace spagnolodesign/allerto-studio-plugin`.
 2. Chiedi a Claude: "configura lo studio".
-3. Rispondi alle domande: nome dello studio, email dell'amministratore, firma, orario del riepilogo.
+3. Rispondi alle domande: nome dello studio, email dell'amministratore, firma, bozze delle email.
 4. Nella prima chat dello studio, Claude propone la lezione guidata (`inizia-qui`). Si può chiedere in ogni momento con "inizia qui".
 
 ## Aggiornare gli studi
@@ -45,7 +44,7 @@ La skill non sovrascrive mai una pagina modificata a mano senza chiedere. Non ca
 
 ## Dove sta la configurazione
 
-Nel database del centro di comando di ciascuno studio (collection `allerto`, documento `config`). Così le attività programmate, che partono da sessioni nuove, la ritrovano conoscendo solo l'indirizzo del centro di comando. Dettagli in `shared/configurazione.md`.
+Nel database del centro di comando di ciascuno studio (collection `allerto`, documento `config`). Così le skill e le attività programmate, che partono da sessioni nuove, la ritrovano conoscendo solo l'indirizzo del centro di comando. Dettagli in `shared/configurazione.md`.
 
 ## Convenzioni Danea
 

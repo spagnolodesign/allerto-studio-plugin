@@ -14,13 +14,6 @@ Si legge e si scrive con lo strumento `ArtifactData` (`get` / `set` / `update` c
   "firma": "Studio Rossi Amministrazioni\nVia Roma 1, Padova · 049 000000",
   "centroDiComando": "https://claude.ai/artifact/…",
   "modalitaVerbali": "C",
-  "riepilogo": {
-    "attivo": true,
-    "orario": "07:45",
-    "giorni": "lun-ven",
-    "fusoOrario": "Europe/Rome",
-    "invio": "automatico"
-  },
   "bozzeEmail": {
     "attivo": true,
     "orario": "08-19",
@@ -39,10 +32,10 @@ Si legge e si scrive con lo strumento `ArtifactData` (`get` / `set` / `update` c
 }
 ```
 
-- `riepilogo.invio`: `automatico` (manda l'email) oppure `bozza` (la lascia in bozza nella posta). Il riepilogo è interno allo studio, quindi `automatico` è il default.
+- `emailAmministratore`: l'indirizzo dell'amministratore. Serve alla skill `bozze-email` per riconoscere i messaggi dello studio; il plugin non gli manda email.
 - `modalitaVerbali`: come lo studio archivia i verbali. `A` = solo moduli Danea, `B` = solo PDF su Drive, `C` = entrambi. La usa la skill `regole-studio`.
 - `bozzeEmail`: il controllo orario della posta della skill `bozze-email`. `orario` = fascia oraria dei giri. L'avviso arriva sempre come notifica dell'attività programmata, mai per email.
-- `soglie.giorniRitardoIntervento`: da quanti giorni di ritardo un intervento finisce nel riepilogo (0 = appena passa la data prevista).
+- `soglie.giorniRitardoIntervento`: da quanti giorni di ritardo un intervento è segnalato come in ritardo (0 = appena passa la data prevista).
 - `versionePlugin`: la versione del plugin che ha scritto per ultimo il centro di comando. La skill `centro-di-comando` la confronta con la propria per sapere se c'è un aggiornamento.
 
 Se un campo manca, usa il valore dell'esempio, tranne i dati dello studio e le email: quelli non vanno mai inventati e si chiedono all'amministratore.
